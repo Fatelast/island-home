@@ -1,0 +1,13 @@
+---
+import IslandPlaceholderPage from '../../../components/island/IslandPlaceholderPage.astro';
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import { defaultLocale, t } from '../../../i18n';
+
+const locale = Astro.currentLocale ?? defaultLocale;
+const title = '海风相册';
+const description = '摄影作品会优先使用缩略图网格，后续接入大图预览和拍摄元信息。';
+---
+
+<BaseLayout locale={locale} title={`${t(locale, title)} | ${t(locale, 'Island Home')}`} description={t(locale, description)}>
+  <IslandPlaceholderPage locale={locale} title={title} description={description} />
+</BaseLayout>

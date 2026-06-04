@@ -1,0 +1,13 @@
+---
+import IslandPlaceholderPage from '../../../components/island/IslandPlaceholderPage.astro';
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import { defaultLocale, t } from '../../../i18n';
+
+const locale = Astro.currentLocale ?? defaultLocale;
+const title = '岛民卡';
+const description = '这里会整理个人介绍、技能栈、摄影设备和联系方式。';
+---
+
+<BaseLayout locale={locale} title={`${t(locale, title)} | ${t(locale, 'Island Home')}`} description={t(locale, description)}>
+  <IslandPlaceholderPage locale={locale} title={title} description={description} />
+</BaseLayout>

@@ -1,0 +1,82 @@
+---
+import { t } from '../../i18n';
+
+interface Props {
+  locale: string;
+  title: string;
+  description: string;
+}
+
+const { locale, title, description } = Astro.props;
+---
+
+<main class="island-page">
+  <section class="island-page__panel" aria-labelledby="page-title">
+    <p class="island-page__kicker">{t(locale, 'Island Home')}</p>
+    <h1 id="page-title">{t(locale, title)}</h1>
+    <p>{t(locale, description)}</p>
+    <a href="/">{t(locale, '返回小岛地图')}</a>
+  </section>
+</main>
+
+<style>
+  .island-page {
+    width: min(100%, 1180px);
+    flex: 1;
+    display: grid;
+    align-items: center;
+    margin: 0 auto;
+    padding: clamp(32px, 7vw, 88px) 18px 64px;
+  }
+
+  .island-page__panel {
+    width: min(100%, 760px);
+    padding: clamp(28px, 5vw, 48px);
+    border: 3px solid rgba(114, 93, 66, 0.16);
+    border-radius: 32px 28px 36px 30px;
+    background: rgba(255, 252, 236, 0.86);
+    box-shadow: 0 14px 0 rgba(114, 93, 66, 0.1);
+  }
+
+  .island-page__kicker,
+  .island-page h1,
+  .island-page p {
+    margin: 0;
+  }
+
+  .island-page__kicker {
+    color: #2c8f83;
+    font-size: 15px;
+    font-weight: 900;
+  }
+
+  .island-page h1 {
+    margin-top: 10px;
+    color: #725d42;
+    font-size: clamp(40px, 7vw, 76px);
+    line-height: 1;
+    letter-spacing: 0;
+  }
+
+  .island-page p:not(.island-page__kicker) {
+    max-width: 620px;
+    margin-top: 18px;
+    color: #735c3d;
+    font-size: 18px;
+    line-height: 1.75;
+  }
+
+  .island-page a {
+    min-height: 48px;
+    display: inline-flex;
+    align-items: center;
+    margin-top: 28px;
+    padding: 0 18px;
+    border-radius: 999px;
+    background: #f7cd67;
+    box-shadow: 0 5px 0 rgba(114, 93, 66, 0.16);
+    color: #725d42;
+    font-weight: 900;
+    text-decoration: none;
+  }
+</style>

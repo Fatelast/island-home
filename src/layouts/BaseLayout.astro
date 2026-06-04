@@ -1,0 +1,85 @@
+---
+import 'animal-island-ui/style';
+
+import SiteHeader from '../components/site/SiteHeader.astro';
+import { defaultLocale, t } from '../i18n';
+
+interface Props {
+  title?: string;
+  description?: string;
+  locale?: string;
+}
+
+const {
+  title = t(defaultLocale, 'Island Home'),
+  description = t(defaultLocale, '这里会慢慢收集我的前端项目、摄影作品和生活片段。'),
+  locale = defaultLocale,
+} = Astro.props;
+
+const lang = locale === 'en' ? 'en' : 'zh-CN';
+const currentPath = Astro.url.pathname;
+---
+
+<html lang={lang}>
+  <head>
+    <meta charset="utf-8" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="icon" href="/favicon.ico" />
+    <meta name="viewport" content="width=device-width" />
+    <meta name="generator" content={Astro.generator} />
+    <meta name="description" content={description} />
+    <title>{title}</title>
+  </head>
+  <body>
+    <div class="animal-cursor animal-cursor--force site-cursor">
+      <SiteHeader locale={locale} currentPath={currentPath} />
+      <slot />
+    </div>
+  </body>
+</html>
+
+<style is:global>
+  :root {
+    color: #725d42;
+    background: #f7f3df;
+    font-synthesis: none;
+    text-rendering: optimizeLegibility;
+  }
+
+  * {
+    box-sizing: border-box;
+  }
+
+  html {
+    min-width: 320px;
+    background: #f7f3df;
+  }
+
+  body {
+    min-width: 320px;
+    min-height: 100dvh;
+    margin: 0;
+    overflow-x: hidden;
+    color: #725d42;
+    background:
+      radial-gradient(circle at 10% 0%, rgba(130, 213, 187, 0.32), transparent 28rem),
+      radial-gradient(circle at 90% 8%, rgba(247, 205, 103, 0.36), transparent 24rem),
+      linear-gradient(180deg, #fff8df 0%, #e9f6e8 48%, #d9f3ef 100%);
+  }
+
+  a {
+    color: inherit;
+  }
+
+  a:focus-visible,
+  button:focus-visible {
+    outline: 3px solid #19c8b9;
+    outline-offset: 4px;
+  }
+
+  .site-cursor {
+    min-height: 100dvh;
+    display: flex;
+    flex-direction: column;
+  }
+</style>
