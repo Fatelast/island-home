@@ -9,7 +9,9 @@
     "dev": "astro dev",
     "build": "astro build",
     "preview": "astro preview",
-    "astro": "astro"
+    "astro": "astro",
+    "test:i18n": "node --disable-warning=ExperimentalWarning --experimental-strip-types --test tests/i18n.test.ts",
+    "test": "npm run test:i18n"
   },
   "dependencies": {
     "@astrojs/react": "^5.0.6",

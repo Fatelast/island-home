@@ -1,17 +1,129 @@
 ---
+import 'animal-island-ui/style';
+
+import { defaultLocale, t } from '../i18n';
+
+const locale = Astro.currentLocale ?? defaultLocale;
+const lang = locale === 'en' ? 'en' : 'zh-CN';
 
 ---
 
-<html lang="en">
+<html lang={lang}>
 	<head>
 		<meta charset="utf-8" />
 		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 		<link rel="icon" href="/favicon.ico" />
 		<meta name="viewport" content="width=device-width" />
 		<meta name="generator" content={Astro.generator} />
-		<title>Astro</title>
+		<title>{t(locale, 'Island Home')}</title>
 	</head>
 	<body>
-		<h1>Astro</h1>
+		<main class="home-page">
+			<section class="hero-section" aria-labelledby="hero-title">
+				<p class="hero-kicker">{t(locale, '个人小岛')}</p>
+				<h1 id="hero-title">{t(locale, 'Island Home')}</h1>
+				<p class="hero-role">{t(locale, '前端开发者 / 摄影爱好者 / 生活记录者')}</p>
+				<p class="hero-description">{t(locale, '这里会慢慢收集我的前端项目、摄影作品和生活片段。')}</p>
+				<nav class="hero-actions" aria-label={t(locale, '首页')}>
+					<a href="/projects/">{t(locale, '查看项目')}</a>
+					<a href="/photos/">{t(locale, '浏览照片')}</a>
+				</nav>
+			</section>
+		</main>
 	</body>
 </html>
+
+<style>
+	body {
+		margin: 0;
+		background:
+			radial-gradient(circle at top left, rgba(130, 213, 187, 0.28), transparent 32rem),
+			#f7f3df;
+		color: #725d42;
+	}
+
+	.home-page {
+		min-height: 100vh;
+		padding: 24px;
+		display: grid;
+		place-items: center;
+		box-sizing: border-box;
+	}
+
+	.hero-section {
+		width: min(100%, 760px);
+		padding: 40px;
+		border: 3px solid rgba(114, 93, 66, 0.18);
+		border-radius: 24px;
+		background: rgba(255, 252, 236, 0.88);
+		box-shadow: 0 16px 0 rgba(114, 93, 66, 0.12);
+	}
+
+	.hero-kicker,
+	.hero-role,
+	.hero-description {
+		margin: 0;
+	}
+
+	.hero-kicker {
+		font-size: 16px;
+		font-weight: 700;
+		color: #19a99b;
+	}
+
+	h1 {
+		margin: 12px 0;
+		font-size: clamp(40px, 8vw, 76px);
+		line-height: 1;
+		letter-spacing: 0;
+	}
+
+	.hero-role {
+		font-size: 20px;
+		font-weight: 700;
+	}
+
+	.hero-description {
+		max-width: 560px;
+		margin-top: 20px;
+		font-size: 17px;
+		line-height: 1.8;
+	}
+
+	.hero-actions {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 14px;
+		margin-top: 28px;
+	}
+
+	.hero-actions a {
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		min-height: 44px;
+		padding: 0 18px;
+		border: 2px solid rgba(114, 93, 66, 0.24);
+		border-radius: 999px;
+		background: #f7cd67;
+		color: #725d42;
+		font-weight: 700;
+		text-decoration: none;
+		box-shadow: 0 5px 0 rgba(114, 93, 66, 0.16);
+	}
+
+	@media (max-width: 560px) {
+		.home-page {
+			padding: 16px;
+		}
+
+		.hero-section {
+			padding: 28px;
+			border-radius: 20px;
+		}
+
+		.hero-actions a {
+			width: 100%;
+		}
+	}
+</style>
