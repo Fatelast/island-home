@@ -8,6 +8,7 @@ import {
   Time,
   Typewriter,
 } from 'animal-island-ui';
+import { createElement as h } from 'react';
 
 import { t } from '../../i18n';
 
@@ -57,76 +58,57 @@ const statusItems = [
 ] as const;
 
 export default function HomeIsland({ locale }: HomeIslandProps) {
-  return (
-    <Cursor className="home-island__cursor">
-      <main className="home-island" aria-labelledby="home-title">
-        <section className="home-island__shell">
-          <div className="home-island__topbar" aria-label={t(locale, '小岛状态')}>
-            <a className="home-island__brand" href="/" aria-label={t(locale, '首页')}>
-              <Icon name="icon-map" size={28} bounce />
-              <span>{t(locale, 'Island Home')}</span>
-            </a>
-            <Time className="home-island__time" />
-          </div>
-
-          <div className="home-island__hero-grid">
-            <section className="home-island__intro" aria-labelledby="home-title">
-              <Card type="title" className="home-island__title-card">
-                <p className="home-island__kicker">{t(locale, '个人小岛控制台')}</p>
-                <h1 id="home-title">{t(locale, 'Island Home')}</h1>
-              </Card>
-
-              <Card className="home-island__dialogue">
-                <p className="home-island__role">{t(locale, '前端开发者 / 摄影爱好者 / 生活记录者')}</p>
-                <Typewriter speed={36}>
-                  <p>{t(locale, '这里会慢慢收集我的前端项目、摄影作品和生活片段。')}</p>
-                </Typewriter>
-              </Card>
-
-              <nav className="home-island__actions" aria-label={t(locale, '首页')}>
-                <a className="home-island__primary-link" href="/island/projects/">
-                  <Icon name="icon-design" size={24} />
-                  <span>{t(locale, '查看项目')}</span>
-                </a>
-                <a className="home-island__secondary-link" href="/island/photos/">
-                  <Icon name="icon-camera" size={24} />
-                  <span>{t(locale, '浏览照片')}</span>
-                </a>
-              </nav>
-            </section>
-
-            <aside className="home-island__phone-panel" aria-label={t(locale, '小岛导航')}>
-              <Phone className="home-island__phone" />
-            </aside>
-          </div>
-
-          <Divider type="wave-yellow" className="home-island__divider" />
-
-          <section className="home-island__feature-grid" aria-label={t(locale, '小岛入口')}>
-            {featureCards.map((item) => (
-              <a key={item.href} className="home-island__feature-link" href={item.href}>
-                <Card color={item.color} className="home-island__feature-card">
-                  <span className="home-island__feature-icon" aria-hidden="true">
-                    <Icon name={item.icon} size={34} bounce />
-                  </span>
-                  <span className="home-island__feature-title">{t(locale, item.title)}</span>
-                  <span className="home-island__feature-description">{t(locale, item.description)}</span>
-                </Card>
-              </a>
-            ))}
-          </section>
-
-          <section className="home-island__status-grid" aria-label={t(locale, '小岛状态')}>
-            {statusItems.map((item) => (
-              <Card key={item.label} type="dashed" className="home-island__status-card">
-                <span>{t(locale, item.label)}</span>
-                <strong>{t(locale, item.value)}</strong>
-              </Card>
-            ))}
-          </section>
-        </section>
-      </main>
-      <Footer type="sea" className="home-island__footer" />
-    </Cursor>
-  );
+  return h(Cursor, { className: 'home-island__cursor' }, [
+    h('main', { key: 'main', className: 'home-island', 'aria-labelledby': 'home-title' },
+      h('section', { className: 'home-island__shell' }, [
+        h('div', { key: 'topbar', className: 'home-island__topbar', 'aria-label': t(locale, '小岛状态') }, [
+          h('a', { key: 'brand', className: 'home-island__brand', href: '/', 'aria-label': t(locale, '首页') }, [
+            h(Icon, { key: 'icon', name: 'icon-map', size: 28, bounce: true }),
+            h('span', { key: 'label' }, t(locale, 'Island Home')),
+          ]),
+          h(Time, { key: 'time', className: 'home-island__time' }),
+        ]),
+        h('div', { key: 'hero', className: 'home-island__hero-grid' }, [
+          h('section', { key: 'intro', className: 'home-island__intro', 'aria-labelledby': 'home-title' }, [
+            h(Card, { key: 'title-card', type: 'title', className: 'home-island__title-card' }, [
+              h('p', { key: 'kicker', className: 'home-island__kicker' }, t(locale, '个人小岛控制台')),
+              h('h1', { key: 'title', id: 'home-title' }, t(locale, 'Island Home')),
+            ]),
+            h(Card, { key: 'dialogue', className: 'home-island__dialogue' }, [
+              h('p', { key: 'role', className: 'home-island__role' }, t(locale, '前端开发者 / 摄影爱好者 / 生活记录者')),
+              h(Typewriter, { key: 'typewriter', speed: 36 },
+                h('p', null, t(locale, '这里会慢慢收集我的前端项目、摄影作品和生活片段。'))),
+            ]),
+            h('nav', { key: 'actions', className: 'home-island__actions', 'aria-label': t(locale, '首页') }, [
+              h('a', { key: 'projects', className: 'home-island__primary-link', href: '/island/projects/' }, [
+                h(Icon, { key: 'icon', name: 'icon-design', size: 24 }),
+                h('span', { key: 'label' }, t(locale, '查看项目')),
+              ]),
+              h('a', { key: 'photos', className: 'home-island__secondary-link', href: '/island/photos/' }, [
+                h(Icon, { key: 'icon', name: 'icon-camera', size: 24 }),
+                h('span', { key: 'label' }, t(locale, '浏览照片')),
+              ]),
+            ]),
+          ]),
+          h('aside', { key: 'phone-panel', className: 'home-island__phone-panel', 'aria-label': t(locale, '小岛导航') },
+            h(Phone, { className: 'home-island__phone' })),
+        ]),
+        h(Divider, { key: 'divider', type: 'wave-yellow', className: 'home-island__divider' }),
+        h('section', { key: 'features', className: 'home-island__feature-grid', 'aria-label': t(locale, '小岛入口') },
+          featureCards.map((item) => h('a', { key: item.href, className: 'home-island__feature-link', href: item.href },
+            h(Card, { color: item.color, className: 'home-island__feature-card' }, [
+              h('span', { key: 'icon-wrap', className: 'home-island__feature-icon', 'aria-hidden': 'true' },
+                h(Icon, { name: item.icon, size: 34, bounce: true })),
+              h('span', { key: 'title', className: 'home-island__feature-title' }, t(locale, item.title)),
+              h('span', { key: 'description', className: 'home-island__feature-description' },
+                t(locale, item.description)),
+            ])))),
+        h('section', { key: 'status', className: 'home-island__status-grid', 'aria-label': t(locale, '小岛状态') },
+          statusItems.map((item) => h(Card, { key: item.label, type: 'dashed', className: 'home-island__status-card' }, [
+            h('span', { key: 'label' }, t(locale, item.label)),
+            h('strong', { key: 'value' }, t(locale, item.value)),
+          ]))),
+      ])),
+    h(Footer, { key: 'footer', type: 'sea', className: 'home-island__footer' }),
+  ]);
 }

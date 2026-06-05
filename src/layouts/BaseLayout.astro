@@ -8,16 +8,26 @@ interface Props {
   title?: string;
   description?: string;
   locale?: string;
+  ogType?: 'website' | 'article';
+  image?: string;
+  noindex?: boolean;
 }
 
 const {
   title = t(defaultLocale, 'Island Home'),
   description = t(defaultLocale, '这里会慢慢收集我的前端项目、摄影作品和生活片段。'),
   locale = defaultLocale,
+  ogType = 'website',
+  image,
+  noindex = false,
 } = Astro.props;
 
 const lang = locale === 'en' ? 'en' : 'zh-CN';
 const currentPath = Astro.url.pathname;
+const siteName = t(locale, 'Island Home');
+const canonicalUrl = Astro.site ? new URL(currentPath, Astro.site).toString() : undefined;
+const imageUrl = image && Astro.site ? new URL(image, Astro.site).toString() : image;
+const ogLocale = lang === 'en' ? 'en_US' : 'zh_CN';
 ---
 
 <html lang={lang}>
@@ -28,6 +38,19 @@ const currentPath = Astro.url.pathname;
     <meta name="viewport" content="width=device-width" />
     <meta name="generator" content={Astro.generator} />
     <meta name="description" content={description} />
+    <meta name="robots" content={noindex ? 'noindex, nofollow' : 'index, follow'} />
+    {canonicalUrl && <link rel="canonical" href={canonicalUrl} />}
+    <meta property="og:type" content={ogType} />
+    <meta property="og:site_name" content={siteName} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:locale" content={ogLocale} />
+    {canonicalUrl && <meta property="og:url" content={canonicalUrl} />}
+    {imageUrl && <meta property="og:image" content={imageUrl} />}
+    <meta name="twitter:card" content={imageUrl ? 'summary_large_image' : 'summary'} />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    {imageUrl && <meta name="twitter:image" content={imageUrl} />}
     <title>{title}</title>
   </head>
   <body>

@@ -1,7 +1,7 @@
 .home-island {
   width: 100%;
   min-height: calc(100dvh - 80px);
-  padding: 28px clamp(16px, 4vw, 48px) 56px;
+  padding: 18px clamp(16px, 4vw, 48px) 56px;
   position: relative;
 }
 
@@ -37,7 +37,7 @@
   align-items: center;
   justify-content: space-between;
   gap: 16px;
-  margin-bottom: 28px;
+  margin-bottom: clamp(16px, 2.4vw, 24px);
 }
 
 .home-island__brand {
@@ -62,7 +62,7 @@
 .home-island__hero-grid {
   display: grid;
   grid-template-columns: minmax(0, 1fr) minmax(300px, 390px);
-  align-items: center;
+  align-items: start;
   gap: clamp(24px, 5vw, 64px);
 }
 
@@ -164,18 +164,21 @@
 }
 
 .home-island__phone-panel {
-  min-height: 520px;
+  min-height: 460px;
   display: grid;
-  place-items: center;
+  place-items: start center;
   position: relative;
+  padding-top: 4px;
+  overflow: visible;
 }
 
 .home-island__phone-panel::before {
-  width: 320px;
-  height: 320px;
+  width: 300px;
+  height: 300px;
   content: '';
   position: absolute;
-  inset: auto auto 42px 16px;
+  top: 210px;
+  left: 8px;
   border-radius: 45% 55% 50% 50%;
   background: rgba(130, 213, 187, 0.36);
   box-shadow:
@@ -186,8 +189,8 @@
 .home-island__phone {
   position: relative;
   z-index: 1;
-  transform: scale(0.58) rotate(3deg);
-  transform-origin: center;
+  transform: translateX(10px) scale(0.54) rotate(3deg);
+  transform-origin: top center;
 }
 
 .home-island__divider {

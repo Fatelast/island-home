@@ -1,0 +1,47 @@
+---
+import { getCollection, render } from 'astro:content';
+
+import TagList from '../../../components/island/TagList.astro';
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import { defaultLocale, t } from '../../../i18n';
+
+import '../../../styles/island-pages.css';
+
+export async function getStaticPaths() {
+  const notes = await getCollection('notes');
+
+  return notes.map((note) => ({
+    params: { slug: note.id },
+    props: { note },
+  }));
+}
+
+const { note } = Astro.props;
+const locale = Astro.currentLocale ?? defaultLocale;
+const dateFormatter = new Intl.DateTimeFormat(locale, { dateStyle: 'medium' });
+const { Content } = await render(note);
+---
+
+<BaseLayout
+  locale={locale}
+  title={`${note.data.title} | ${t(locale, 'Island Home')}`}
+  description={note.data.description}
+  ogType="article"
+>
+  <main class="island-content-page island-note">
+    <article>
+      <header class="island-content-page__hero">
+        <p class="island-content-page__kicker">{t(locale, '中文文章')}</p>
+        <h1>{note.data.title}</h1>
+        <p>{note.data.description}</p>
+        <div class="island-card__meta">
+          <span class="island-pill">{dateFormatter.format(note.data.pubDate)}</span>
+        </div>
+        <TagList items={note.data.tags} />
+      </header>
+      <div class="island-card island-note__body">
+        <Content />
+      </div>
+    </article>
+  </main>
+</BaseLayout>

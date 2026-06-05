@@ -1,0 +1,30 @@
+---
+import { t } from '../../i18n';
+
+interface Props {
+  locale: string;
+  title: string;
+  description: string;
+  kicker: string;
+  headingId: string;
+  className?: string;
+}
+
+const {
+  locale,
+  title,
+  description,
+  kicker,
+  headingId,
+  className = '',
+} = Astro.props;
+---
+
+<main class:list={['island-content-page', className]}>
+  <section class="island-content-page__hero" aria-labelledby={headingId}>
+    <p class="island-content-page__kicker">{t(locale, kicker)}</p>
+    <h1 id={headingId}>{t(locale, title)}</h1>
+    <p>{t(locale, description)}</p>
+  </section>
+  <slot />
+</main>

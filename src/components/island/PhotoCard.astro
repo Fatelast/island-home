@@ -1,0 +1,61 @@
+---
+import { t } from '../../i18n';
+
+import type { PhotoItem } from '../../data/photos';
+
+interface Props {
+  locale: string;
+  photo: PhotoItem;
+}
+
+const { locale, photo } = Astro.props;
+---
+
+<article class="island-card island-card--photo" tabindex="0" aria-label={t(locale, photo.title)}>
+  <div class={`island-card__media island-card__media--${photo.color}`}>
+    {
+      photo.thumbnail ? (
+        <img src={photo.thumbnail} alt={t(locale, photo.alt)} loading="lazy" decoding="async" />
+      ) : (
+        <span>{t(locale, '缩略图占位')}</span>
+      )
+    }
+    <div class="island-photo-card__quick">
+      <span>{t(locale, '拍摄地点')}</span>
+      <strong>{t(locale, photo.location)}</strong>
+    </div>
+  </div>
+
+  <div class="island-photo-card__summary">
+    <h2>{t(locale, photo.title)}</h2>
+    <span class="island-pill">{photo.date}</span>
+  </div>
+
+  <div class="island-photo-card__details">
+    <div class="island-fact-list">
+      <div class="island-fact">
+        <span>{t(locale, '拍摄日期')}</span>
+        <strong>{photo.date}</strong>
+      </div>
+      <div class="island-fact">
+        <span>{t(locale, '相机')}</span>
+        <strong>{t(locale, photo.camera)}</strong>
+      </div>
+      <div class="island-fact">
+        <span>{t(locale, '镜头')}</span>
+        <strong>{t(locale, photo.lens)}</strong>
+      </div>
+    </div>
+    <div class="island-card__actions">
+      {
+        photo.original ? (
+          <a class="island-action" href={photo.original}>
+            {t(locale, '查看大图')}
+          </a>
+        ) : (
+          <span class="island-pill">{t(locale, '大图待补充')}</span>
+        )
+      }
+    </div>
+  </div>
+</article>

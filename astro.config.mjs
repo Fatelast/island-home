@@ -3,8 +3,11 @@ import { defineConfig } from 'astro/config';
 
 import react from '@astrojs/react';
 
+const site = process.env.SITE_URL;
+
 // https://astro.build/config
 export default defineConfig({
+  ...(site ? { site } : {}),
   devToolbar: {
     enabled: false,
   },

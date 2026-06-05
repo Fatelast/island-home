@@ -1,0 +1,16 @@
+---
+interface Props {
+  items: string[];
+  ariaLabel?: string;
+}
+
+const { items, ariaLabel } = Astro.props;
+---
+
+<div class="island-card__tags" aria-label={ariaLabel}>
+  {
+    items.map((item) => (
+      <span class="island-pill">{item}</span>
+    ))
+  }
+</div>

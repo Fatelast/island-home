@@ -1,13 +1,30 @@
 ---
-import IslandPlaceholderPage from '../../../components/island/IslandPlaceholderPage.astro';
+import { getCollection } from 'astro:content';
+
+import NoteCard from '../../../components/island/NoteCard.astro';
+import PageShell from '../../../components/island/PageShell.astro';
 import BaseLayout from '../../../layouts/BaseLayout.astro';
 import { defaultLocale, t } from '../../../i18n';
 
+import '../../../styles/island-pages.css';
+
 const locale = Astro.currentLocale ?? defaultLocale;
 const title = '留言木屋';
-const description = '生活记录会使用 Markdown 或 MDX，先保留文章和图文记录列表结构。';
+const description = '文章正文暂不纳入国际化范围，页面界面会继续跟随语言切换。';
+const notes = (await getCollection('notes')).sort(
+  (left, right) => right.data.pubDate.getTime() - left.data.pubDate.getTime(),
+);
+const dateFormatter = new Intl.DateTimeFormat(locale, { dateStyle: 'medium' });
 ---
 
 <BaseLayout locale={locale} title={`${t(locale, title)} | ${t(locale, 'Island Home')}`} description={t(locale, description)}>
-  <IslandPlaceholderPage locale={locale} title={title} description={description} />
+  <PageShell locale={locale} title={title} description={description} kicker="文章记录" headingId="notes-title">
+    <section class="island-content-page__grid island-content-page__grid--two" aria-label={t(locale, '文章列表')}>
+      {
+        notes.map((note) => (
+          <NoteCard locale={locale} note={note} formattedDate={dateFormatter.format(note.data.pubDate)} />
+        ))
+      }
+    </section>
+  </PageShell>
 </BaseLayout>

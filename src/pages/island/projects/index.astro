@@ -1,13 +1,25 @@
 ---
-import IslandPlaceholderPage from '../../../components/island/IslandPlaceholderPage.astro';
+import { projects } from '../../../data/projects';
+import PageShell from '../../../components/island/PageShell.astro';
+import ProjectCard from '../../../components/island/ProjectCard.astro';
 import BaseLayout from '../../../layouts/BaseLayout.astro';
 import { defaultLocale, t } from '../../../i18n';
 
+import '../../../styles/island-pages.css';
+
 const locale = Astro.currentLocale ?? defaultLocale;
 const title = '开发工坊';
-const description = '前端项目会先以占位卡片呈现，后续补充截图、仓库和预览链接。';
+const description = '前端项目会先以数据卡片呈现，后续逐步补充截图、仓库和线上预览。';
 ---
 
 <BaseLayout locale={locale} title={`${t(locale, title)} | ${t(locale, 'Island Home')}`} description={t(locale, description)}>
-  <IslandPlaceholderPage locale={locale} title={title} description={description} />
+  <PageShell locale={locale} title={title} description={description} kicker="项目总览" headingId="projects-title">
+    <section class="island-content-page__grid" aria-label={t(locale, '项目列表')}>
+      {
+        projects.map((project) => (
+          <ProjectCard locale={locale} project={project} />
+        ))
+      }
+    </section>
+  </PageShell>
 </BaseLayout>

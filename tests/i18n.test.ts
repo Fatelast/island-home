@@ -46,3 +46,17 @@ test('maps island route navigation source text to semantic keys', () => {
   assert.equal(getMessageKey('岛民卡'), 'island.nav.profile');
   assert.equal(t('en', '开发工坊'), 'Workshop');
 });
+
+test('maps data-driven island page source text to semantic keys', () => {
+  assert.equal(getMessageKey('项目总览'), 'projects.overview');
+  assert.equal(getMessageKey('个人主页重构'), 'projects.islandHome.title');
+  assert.equal(getMessageKey('摄影索引'), 'photos.index');
+  assert.equal(getMessageKey('文章正文暂不纳入国际化范围，页面界面会继续跟随语言切换。'), 'notes.description');
+  assert.equal(t('en', '中文文章'), 'Chinese Article');
+});
+
+test('maps photo image strategy source text to semantic keys', () => {
+  assert.equal(getMessageKey('查看大图'), 'photos.viewOriginal');
+  assert.equal(getMessageKey('大图待补充'), 'photos.originalPending');
+  assert.equal(t('en', '傍晚海边步道的摄影占位图'), 'Photography placeholder for an evening seaside walk');
+});

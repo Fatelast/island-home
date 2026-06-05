@@ -6,7 +6,7 @@ Island Home 是一个个人展示型静态网站，用来收集前端项目、�
 
 - 个人主页 / 作品集 / 摄影展示 / 生活记录
 - 默认中文主站，预留英文版本
-- 内容优先使用静态数据、Markdown 或 MDX 管理
+- 内容优先使用静态数据和 Markdown 管理
 - 后续可部署到 Cloudflare Pages 或 Vercel
 
 ## 技术栈
@@ -15,7 +15,7 @@ Island Home 是一个个人展示型静态网站，用来收集前端项目、�
 - [React](https://react.dev/)：局部交互组件
 - [TypeScript](https://www.typescriptlang.org/)：类型约束
 - [animal-island-ui](https://github.com/guokaigdg/animal-island-ui)：岛屿风格 React UI 组件
-- Markdown / MDX：生活记录内容预留
+- Markdown：生活记录内容
 
 ## 国际化方案
 
@@ -36,26 +36,108 @@ t(locale, '项目作品')
 
 内部会先通过中文原文反查稳定 key，例如 `nav.projects`，再根据当前语言返回对应文案。反查表在模块初始化时构建为 `Map`，每次调用为 O(1) 查询，避免文案数量增长后在渲染时遍历。
 
-长文案、项目简介、摄影说明和文章内容不建议使用中文原文反查，后续应使用多语言字段或按语言拆分 MDX 内容。
+当前国际化范围只覆盖站点 UI 和短展示文案。文章标题、文章摘要、文章正文、摄影随笔等内容正文暂不纳入国际化范围，默认按中文展示。
 
-## MVP 页面规划
+## 页面结构
 
-- 首页：头像、昵称、身份介绍、精选项目入口、精选照片入口、最近生活记录入口
-- 项目页：项目卡片、截图、简介、技术栈、GitHub 地址、线上预览链接
-- 摄影页：照片网格或瀑布流、缩略图、懒加载、大图预览、拍摄元信息
-- 生活记录页：文章或图文记录列表，支持 Markdown / MDX
-- 关于页：个人介绍、技能栈、摄影设备、联系方式和社交链接
+- `/`：小岛地图首页，展示核心入口和状态信息。
+- `/island/projects/`：开发工坊，读取 `src/data/projects.ts`。
+- `/island/photos/`：海风相册，读取 `src/data/photos.ts`。
+- `/island/notes/`：留言木屋文章列表，读取 `src/content/notes`。
+- `/island/notes/[slug]/`：文章详情页，渲染 Markdown 内容。
+- `/island/about/`：岛民卡，读取 `src/data/profile.ts`。
+
+## 内容添加方式
+
+项目数据：
+
+```ts
+// src/data/projects.ts
+{
+  title: '项目名称',
+  summary: '项目简介',
+  status: '正在搭建',
+  techStack: ['Astro', 'React'],
+  repoUrl: 'https://github.com/...',
+  demoUrl: '/',
+  coverTone: 'mint',
+}
+```
+
+摄影数据：
+
+```ts
+// src/data/photos.ts
+{
+  title: '照片标题',
+  alt: '照片替代文本',
+  location: '拍摄地点',
+  date: '2026-06-05',
+  camera: '相机型号',
+  lens: '镜头信息',
+  thumbnail: '/images/photos/demo-thumb.webp',
+  original: '/images/photos/demo-original.webp',
+  color: 'teal',
+}
+```
+
+文章内容：
+
+```md
+---
+title: '文章标题'
+description: '文章摘要'
+pubDate: '2026-06-05'
+tags: ['生活', '项目']
+locale: 'zh-CN'
+---
+
+正文内容...
+```
 
 ## 图片策略
 
 摄影照片体积通常较大，第一版开始预留图片优化结构：
 
-- 列表页只加载缩略图
-- 点击预览时再加载原图
+- 列表页只加载缩略图，未配置缩略图时显示渐变占位块
+- 有 `original` 字段时显示大图入口
 - 优先使用 `webp` 或 `avif`
-- 图片元素使用懒加载
+- 图片元素使用懒加载和异步解码
 - 数据结构保留 `thumbnail` 和 `original` 字段
 - 大量图片后续可迁移到 Cloudflare R2、OSS、COS、又拍云或图床
+
+更多约定见 [图片策略](docs/image-strategy.md)。
+
+## SEO
+
+`BaseLayout` 已统一输出基础 SEO 标签：
+
+- `title`
+- `description`
+- `robots`
+- Open Graph
+- Twitter Card
+- 文章详情页使用 `og:type=article`
+
+如果配置 `SITE_URL`，构建时会输出 canonical URL。
+
+## 部署
+
+推荐第一阶段使用 Cloudflare Pages 或 Vercel 的静态部署能力。
+
+构建命令：
+
+```bash
+npm run build
+```
+
+输出目录：
+
+```text
+dist
+```
+
+部署细节见 [部署说明](docs/deployment.md)。
 
 ## 本地开发
 
@@ -74,8 +156,8 @@ npm run test
 
 ## 当前阶段计划
 
-1. 建立基础布局、导航和页脚。
-2. 建立项目、摄影、生活记录的静态数据结构。
-3. 完成首页 MVP。
-4. 扩展项目页、摄影页、生活记录页和关于页。
-5. 根据真实素材补充图片优化和内容管理约定。
+1. 替换真实项目、照片和个人资料。
+2. 继续补充 Markdown 文章。
+3. 接入真实缩略图和原图素材。
+4. 部署到 Cloudflare Pages 或 Vercel。
+5. 绑定正式域名后配置 `SITE_URL`。

@@ -16,10 +16,6 @@ const locale = Astro.currentLocale ?? defaultLocale;
       <p>{t(locale, '个人小岛控制台')}</p>
       <h1 id="fallback-title">{t(locale, 'Island Home')}</h1>
       <p>{t(locale, '这里会慢慢收集我的前端项目、摄影作品和生活片段。')}</p>
-      <nav aria-label={t(locale, '首页')}>
-        <a href="/island/projects/">{t(locale, '查看项目')}</a>
-        <a href="/island/photos/">{t(locale, '浏览照片')}</a>
-      </nav>
     </main>
   </HomeIsland>
 </BaseLayout>
@@ -45,22 +41,5 @@ const locale = Astro.currentLocale ?? defaultLocale;
     font-size: clamp(42px, 9vw, 84px);
     line-height: 1;
     letter-spacing: 0;
-  }
-
-  .home-fallback nav {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 12px;
-  }
-
-  .home-fallback a {
-    min-height: 48px;
-    display: inline-flex;
-    align-items: center;
-    padding: 10px 18px;
-    border-radius: 999px;
-    background: #f7cd67;
-    font-weight: 900;
-    text-decoration: none;
   }
 </style>

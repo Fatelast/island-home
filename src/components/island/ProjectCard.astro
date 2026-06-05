@@ -1,0 +1,42 @@
+---
+import { t } from '../../i18n';
+import TagList from './TagList.astro';
+
+import type { ProjectItem } from '../../data/projects';
+
+interface Props {
+  locale: string;
+  project: ProjectItem;
+}
+
+const { locale, project } = Astro.props;
+---
+
+<article class="island-card island-card--project">
+  <div class={`island-card__media island-card__media--${project.coverTone}`}>
+    <span>{t(locale, project.status)}</span>
+  </div>
+  <h2>{t(locale, project.title)}</h2>
+  <p>{t(locale, project.summary)}</p>
+  <TagList items={project.techStack} ariaLabel={t(locale, '技术栈')} />
+  <div class="island-card__actions">
+    {
+      project.repoUrl ? (
+        <a class="island-action" href={project.repoUrl} target="_blank" rel="noreferrer">
+          {t(locale, '查看仓库')}
+        </a>
+      ) : (
+        <span class="island-pill">{t(locale, '仓库待补充')}</span>
+      )
+    }
+    {
+      project.demoUrl ? (
+        <a class="island-action island-action--quiet" href={project.demoUrl}>
+          {t(locale, '在线预览')}
+        </a>
+      ) : (
+        <span class="island-pill">{t(locale, '预览待补充')}</span>
+      )
+    }
+  </div>
+</article>
