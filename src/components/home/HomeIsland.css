@@ -74,6 +74,7 @@
 .home-island__title-card,
 .home-island__dialogue {
   animation: home-card-rise 420ms ease-out both;
+  will-change: transform, opacity;
 }
 
 .home-island__dialogue {
@@ -191,6 +192,7 @@
   z-index: 1;
   transform: translateX(10px) scale(0.54) rotate(3deg);
   transform-origin: top center;
+  will-change: transform;
 }
 
 .home-island__divider {
@@ -215,6 +217,7 @@
   flex-direction: column;
   gap: 14px;
   animation: home-card-rise 420ms ease-out both;
+  will-change: transform, opacity;
   transition:
     box-shadow 180ms ease,
     transform 180ms ease,

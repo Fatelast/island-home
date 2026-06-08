@@ -8,11 +8,15 @@ import {
   Time,
   Typewriter,
 } from 'animal-island-ui';
-import { createElement as h } from 'react';
+import { useGSAP } from '@gsap/react';
+import { gsap } from 'gsap';
+import { createElement as h, useRef } from 'react';
 
 import { t } from '../../i18n';
 
 import './HomeIsland.css';
+
+gsap.registerPlugin(useGSAP);
 
 interface HomeIslandProps {
   locale: string;
@@ -58,7 +62,65 @@ const statusItems = [
 ] as const;
 
 export default function HomeIsland({ locale }: HomeIslandProps) {
-  return h(Cursor, { className: 'home-island__cursor' }, [
+  const scopeRef = useRef<HTMLDivElement>(null);
+
+  useGSAP(() => {
+    const mm = gsap.matchMedia();
+
+    mm.add(
+      {
+        reduceMotion: '(prefers-reduced-motion: reduce)',
+        isDesktop: '(min-width: 921px)',
+      },
+      (context) => {
+        const { reduceMotion, isDesktop } = context.conditions ?? {};
+
+        if (reduceMotion) {
+          gsap.set(
+            [
+              '.home-island__topbar',
+              '.home-island__title-card',
+              '.home-island__dialogue',
+              '.home-island__actions',
+              '.home-island__phone-panel',
+              '.home-island__divider',
+              '.home-island__feature-link',
+              '.home-island__status-card',
+            ].join(', '),
+            { autoAlpha: 1, clearProps: 'transform' },
+          );
+          return undefined;
+        }
+
+        const introTimeline = gsap.timeline({ defaults: { ease: 'power3.out', duration: 0.72 } });
+
+        introTimeline
+          .from('.home-island__topbar', { y: -18, autoAlpha: 0 })
+          .from('.home-island__title-card', { y: 34, scale: 0.98, autoAlpha: 0 }, '-=0.34')
+          .from('.home-island__dialogue', { y: 26, autoAlpha: 0 }, '-=0.46')
+          .from('.home-island__actions > a', { y: 16, autoAlpha: 0, stagger: 0.08 }, '-=0.42')
+          .from('.home-island__phone-panel', { x: isDesktop ? 42 : 0, y: 24, rotation: 1.8, autoAlpha: 0 }, '-=0.6')
+          .from('.home-island__divider', { scaleX: 0.7, autoAlpha: 0 }, '-=0.25')
+          .from('.home-island__feature-link', { y: 24, autoAlpha: 0, stagger: 0.08 }, '-=0.22')
+          .from('.home-island__status-card', { y: 18, autoAlpha: 0, stagger: 0.06 }, '-=0.36');
+
+        gsap.to('.home-island__phone', {
+          y: -10,
+          rotation: '+=1.2',
+          duration: 3.2,
+          ease: 'sine.inOut',
+          repeat: -1,
+          yoyo: true,
+        });
+
+        return undefined;
+      },
+    );
+
+    return () => mm.revert();
+  }, { scope: scopeRef });
+
+  return h('div', { ref: scopeRef, className: 'home-island-motion-scope' }, h(Cursor, { className: 'home-island__cursor' }, [
     h('main', { key: 'main', className: 'home-island', 'aria-labelledby': 'home-title' },
       h('section', { className: 'home-island__shell' }, [
         h('div', { key: 'topbar', className: 'home-island__topbar', 'aria-label': t(locale, '小岛状态') }, [
@@ -110,5 +172,5 @@ export default function HomeIsland({ locale }: HomeIslandProps) {
           ]))),
       ])),
     h(Footer, { key: 'footer', type: 'sea', className: 'home-island__footer' }),
-  ]);
+  ]));
 }

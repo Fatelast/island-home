@@ -60,6 +60,7 @@
   border-radius: 22px;
   background: rgba(255, 252, 236, 0.88);
   box-shadow: 0 10px 0 rgba(114, 93, 66, 0.08);
+  will-change: transform, opacity;
 }
 
 .island-card--link {

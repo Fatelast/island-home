@@ -58,6 +58,9 @@ const ogLocale = lang === 'en' ? 'en_US' : 'zh_CN';
       <SiteHeader locale={locale} currentPath={currentPath} />
       <slot />
     </div>
+    <script>
+      import '../scripts/pageMotion';
+    </script>
   </body>
 </html>
 
