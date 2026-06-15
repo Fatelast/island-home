@@ -41,34 +41,41 @@ export default function PhotoCard({
           className={`photo-card__media photo-card__media--${photo.color}`}
           style={{ aspectRatio: `${photo.width} / ${photo.height}` }}
         >
-          {hasImage && (
-            <picture>
-              {photo.thumbnailSources?.map((source) => (
-                <source
-                  key={`${source.src}-${source.width}`}
-                  srcSet={`${source.src} ${source.width}w`}
-                  type={source.type}
+          <span className="photo-card__visual" data-photo-card-visual>
+            {hasImage && (
+              <picture>
+                {photo.thumbnailSources?.map((source) => (
+                  <source
+                    key={`${source.src}-${source.width}`}
+                    srcSet={`${source.src} ${source.width}w`}
+                    type={source.type}
+                  />
+                ))}
+                <img
+                  src={photo.thumbnail}
+                  alt={photo.alt}
+                  loading="lazy"
+                  decoding="async"
+                  onLoad={onMeasure}
+                  onError={() => {
+                    setImageFailed(true);
+                    onMeasure();
+                  }}
                 />
-              ))}
-              <img
-                src={photo.thumbnail}
-                alt={photo.alt}
-                loading="lazy"
-                decoding="async"
-                onLoad={onMeasure}
-                onError={() => {
-                  setImageFailed(true);
-                  onMeasure();
-                }}
-              />
-            </picture>
-          )}
-          {!hasImage && (
-            <span className="photo-card__placeholder" aria-hidden="true">
-              <span>{photo.width} × {photo.height}</span>
-            </span>
-          )}
-          <span className="photo-card__overlay">
+              </picture>
+            )}
+            {!hasImage && (
+              <span className="photo-card__placeholder" aria-hidden="true">
+                <span>{photo.width} × {photo.height}</span>
+              </span>
+            )}
+          </span>
+          <span
+            className="photo-card__shine"
+            data-photo-card-shine
+            aria-hidden="true"
+          />
+          <span className="photo-card__overlay" data-photo-card-overlay>
             <span className="photo-card__facts">
               <span><small>{labels.location}</small><strong>{photo.location}</strong></span>
               <span><small>{labels.camera}</small><strong>{photo.camera}</strong></span>

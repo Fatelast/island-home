@@ -1,4 +1,5 @@
 import assert from 'node:assert/strict';
+import { readFileSync } from 'node:fs';
 import test from 'node:test';
 
 import {
@@ -11,6 +12,7 @@ import {
   parsePhotoArchivePath,
   sortPhotosByDate,
 } from '../src/lib/photos.ts';
+import { getPhotoCardMotion } from '../src/lib/photo-card-motion.ts';
 
 import type { PhotoItem } from '../src/data/photos.ts';
 
@@ -125,4 +127,47 @@ test('calculates bounded lightbox indexes', () => {
   assert.equal(getAdjacentPhotoIndex(0, 1, 4), 1);
   assert.equal(getAdjacentPhotoIndex(3, 1, 4), undefined);
   assert.equal(getAdjacentPhotoIndex(3, -1, 4), 2);
+});
+
+test('loads shared island page styles from every photo archive route', () => {
+  const sharedPage = readFileSync(
+    new URL('../src/components/photos/PhotoArchivePage.astro', import.meta.url),
+    'utf8',
+  );
+  const rootPage = readFileSync(
+    new URL('../src/pages/island/photos/index.astro', import.meta.url),
+    'utf8',
+  );
+
+  assert.match(sharedPage, /import '\.\.\/\.\.\/styles\/island-pages\.css';/);
+  assert.doesNotMatch(rootPage, /styles\/island-pages\.css/);
+});
+
+test('keeps pointer-driven photo card motion centered and bounded', () => {
+  assert.deepEqual(
+    getPhotoCardMotion({
+      pointerX: 150,
+      pointerY: 100,
+      width: 300,
+      height: 200,
+    }),
+    {
+      rotationX: 0,
+      rotationY: 0,
+      shineX: 0,
+      shineY: 0,
+    },
+  );
+
+  const edge = getPhotoCardMotion({
+    pointerX: 900,
+    pointerY: -200,
+    width: 300,
+    height: 200,
+  });
+
+  assert.equal(edge.rotationX, 3);
+  assert.equal(edge.rotationY, 3);
+  assert.equal(edge.shineX, 18);
+  assert.equal(edge.shineY, -18);
 });

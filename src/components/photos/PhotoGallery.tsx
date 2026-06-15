@@ -11,6 +11,7 @@ import React, {
 
 import PhotoCard from './PhotoCard';
 import PhotoLightbox from './PhotoLightbox';
+import { getPhotoCardMotion } from '../../lib/photo-card-motion';
 import { mergeUniquePhotos } from '../../lib/photos';
 
 import type { PhotoItem } from '../../data/photos';
@@ -150,6 +151,252 @@ export default function PhotoGallery({
         return undefined;
       },
     );
+    return () => media.revert();
+  }, { scope: scopeRef });
+
+  useGSAP((_, contextSafe) => {
+    const grid = gridRef.current;
+    if (!grid) {
+      return undefined;
+    }
+
+    let activeCard: HTMLElement | null = null;
+    let activeMotion: {
+      card: HTMLElement;
+      rotationX: ReturnType<typeof gsap.quickTo>;
+      rotationY: ReturnType<typeof gsap.quickTo>;
+      shineX?: ReturnType<typeof gsap.quickTo>;
+      shineY?: ReturnType<typeof gsap.quickTo>;
+    } | null = null;
+
+    const getCard = (target: EventTarget | null) => {
+      if (!(target instanceof Element)) {
+        return null;
+      }
+      const card = target.closest<HTMLElement>('[data-photo-card]');
+      return card && grid.contains(card) ? card : null;
+    };
+
+    const getPart = (card: HTMLElement, selector: string) => (
+      card.querySelector<HTMLElement>(selector)
+    );
+
+    const animateCard = (card: HTMLElement, isActive: boolean) => {
+      const visual = getPart(card, '[data-photo-card-visual]');
+      const overlay = getPart(card, '[data-photo-card-overlay]');
+      const shine = getPart(card, '[data-photo-card-shine]');
+
+      gsap.to(card, {
+        y: isActive ? -6 : 0,
+        scale: isActive ? 1.01 : 1,
+        boxShadow: isActive
+          ? '0 16px 0 rgba(114, 93, 66, 0.11)'
+          : '0 8px 0 rgba(114, 93, 66, 0.08)',
+        duration: isActive ? 0.24 : 0.34,
+        ease: isActive ? 'power2.out' : 'power3.out',
+        overwrite: 'auto',
+      });
+      if (visual) {
+        gsap.to(visual, {
+          scale: isActive ? 1.035 : 1,
+          duration: isActive ? 0.46 : 0.38,
+          ease: 'power3.out',
+          overwrite: 'auto',
+        });
+      }
+      if (overlay) {
+        gsap.to(overlay, {
+          y: isActive ? 0 : 10,
+          autoAlpha: isActive ? 1 : 0,
+          duration: isActive ? 0.22 : 0.18,
+          ease: 'power2.out',
+          overwrite: 'auto',
+        });
+      }
+      if (shine) {
+        gsap.to(shine, {
+          autoAlpha: isActive ? 0.58 : 0,
+          duration: 0.2,
+          ease: 'power1.out',
+          overwrite: 'auto',
+        });
+      }
+    };
+
+    const resetActiveCard = () => {
+      if (!activeCard) {
+        return;
+      }
+      activeMotion?.rotationX(0);
+      activeMotion?.rotationY(0);
+      activeMotion?.shineX?.(0);
+      activeMotion?.shineY?.(0);
+      animateCard(activeCard, false);
+      activeCard = null;
+      activeMotion = null;
+    };
+
+    const activateCard = (card: HTMLElement) => {
+      if (activeCard === card) {
+        return;
+      }
+      resetActiveCard();
+      activeCard = card;
+      gsap.set(card, {
+        transformPerspective: 900,
+        transformOrigin: '50% 50%',
+      });
+      animateCard(card, true);
+    };
+
+    const getMotion = (card: HTMLElement) => {
+      if (activeMotion?.card === card) {
+        return activeMotion;
+      }
+      const shine = getPart(card, '[data-photo-card-shine]');
+      activeMotion = {
+        card,
+        rotationX: gsap.quickTo(card, 'rotationX', {
+          duration: 0.32,
+          ease: 'power3.out',
+        }),
+        rotationY: gsap.quickTo(card, 'rotationY', {
+          duration: 0.32,
+          ease: 'power3.out',
+        }),
+        ...(shine ? {
+          shineX: gsap.quickTo(shine, 'xPercent', {
+            duration: 0.4,
+            ease: 'power3.out',
+          }),
+          shineY: gsap.quickTo(shine, 'yPercent', {
+            duration: 0.4,
+            ease: 'power3.out',
+          }),
+        } : {}),
+      };
+      return activeMotion;
+    };
+
+    const handlePointerOver = contextSafe((event: PointerEvent) => {
+      const card = getCard(event.target);
+      if (
+        !card
+        || (event.relatedTarget instanceof Node && card.contains(event.relatedTarget))
+      ) {
+        return;
+      }
+      activateCard(card);
+    });
+
+    const handlePointerMove = contextSafe((event: PointerEvent) => {
+      const card = getCard(event.target);
+      if (!card) {
+        return;
+      }
+      activateCard(card);
+      const bounds = card.getBoundingClientRect();
+      const motion = getPhotoCardMotion({
+        pointerX: event.clientX - bounds.left,
+        pointerY: event.clientY - bounds.top,
+        width: bounds.width,
+        height: bounds.height,
+      });
+      const controller = getMotion(card);
+      controller.rotationX(motion.rotationX);
+      controller.rotationY(motion.rotationY);
+      controller.shineX?.(motion.shineX);
+      controller.shineY?.(motion.shineY);
+    });
+
+    const handlePointerOut = contextSafe((event: PointerEvent) => {
+      const card = getCard(event.target);
+      if (
+        !card
+        || (event.relatedTarget instanceof Node && card.contains(event.relatedTarget))
+      ) {
+        return;
+      }
+      resetActiveCard();
+    });
+
+    const handleFocusIn = contextSafe((event: FocusEvent) => {
+      const card = getCard(event.target);
+      if (card) {
+        activateCard(card);
+      }
+    });
+
+    const handleFocusOut = contextSafe((event: FocusEvent) => {
+      const card = getCard(event.target);
+      if (
+        card
+        && !(event.relatedTarget instanceof Node && card.contains(event.relatedTarget))
+      ) {
+        resetActiveCard();
+      }
+    });
+
+    const handlePointerDown = contextSafe((event: PointerEvent) => {
+      const card = getCard(event.target);
+      if (!card) {
+        return;
+      }
+      gsap.to(card, {
+        y: activeCard === card ? -3 : 1,
+        scale: 0.985,
+        duration: 0.12,
+        ease: 'power2.out',
+        overwrite: 'auto',
+      });
+    });
+
+    const handlePointerUp = contextSafe((event: PointerEvent) => {
+      const card = getCard(event.target);
+      if (!card) {
+        return;
+      }
+      animateCard(card, activeCard === card);
+    });
+
+    const media = gsap.matchMedia();
+    media.add(
+      {
+        finePointer: '(hover: hover) and (pointer: fine)',
+        reduceMotion: '(prefers-reduced-motion: reduce)',
+      },
+      ({ conditions }) => {
+        if (conditions?.reduceMotion) {
+          return undefined;
+        }
+
+        grid.addEventListener('focusin', handleFocusIn);
+        grid.addEventListener('focusout', handleFocusOut);
+        grid.addEventListener('pointerdown', handlePointerDown);
+        grid.addEventListener('pointerup', handlePointerUp);
+        grid.addEventListener('pointercancel', handlePointerUp);
+
+        if (conditions?.finePointer) {
+          grid.addEventListener('pointerover', handlePointerOver);
+          grid.addEventListener('pointermove', handlePointerMove);
+          grid.addEventListener('pointerout', handlePointerOut);
+        }
+
+        return () => {
+          grid.removeEventListener('focusin', handleFocusIn);
+          grid.removeEventListener('focusout', handleFocusOut);
+          grid.removeEventListener('pointerdown', handlePointerDown);
+          grid.removeEventListener('pointerup', handlePointerUp);
+          grid.removeEventListener('pointercancel', handlePointerUp);
+          grid.removeEventListener('pointerover', handlePointerOver);
+          grid.removeEventListener('pointermove', handlePointerMove);
+          grid.removeEventListener('pointerout', handlePointerOut);
+          activeCard = null;
+          activeMotion = null;
+        };
+      },
+    );
+
     return () => media.revert();
   }, { scope: scopeRef });
 
