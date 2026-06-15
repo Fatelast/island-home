@@ -359,6 +359,10 @@ export default function PhotoGallery({
       animateCard(card, activeCard === card);
     });
 
+    const handlePointerCancel = contextSafe(() => {
+      resetActiveCard();
+    });
+
     const media = gsap.matchMedia();
     media.add(
       {
@@ -374,7 +378,7 @@ export default function PhotoGallery({
         grid.addEventListener('focusout', handleFocusOut);
         grid.addEventListener('pointerdown', handlePointerDown);
         grid.addEventListener('pointerup', handlePointerUp);
-        grid.addEventListener('pointercancel', handlePointerUp);
+        grid.addEventListener('pointercancel', handlePointerCancel);
 
         if (conditions?.finePointer) {
           grid.addEventListener('pointerover', handlePointerOver);
@@ -387,7 +391,7 @@ export default function PhotoGallery({
           grid.removeEventListener('focusout', handleFocusOut);
           grid.removeEventListener('pointerdown', handlePointerDown);
           grid.removeEventListener('pointerup', handlePointerUp);
-          grid.removeEventListener('pointercancel', handlePointerUp);
+          grid.removeEventListener('pointercancel', handlePointerCancel);
           grid.removeEventListener('pointerover', handlePointerOver);
           grid.removeEventListener('pointermove', handlePointerMove);
           grid.removeEventListener('pointerout', handlePointerOut);

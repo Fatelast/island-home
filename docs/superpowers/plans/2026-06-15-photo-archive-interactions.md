@@ -17,10 +17,10 @@
 - Modify: `src/components/photos/PhotoArchivePage.astro`
 - Modify: `src/pages/island/photos/index.astro`
 
-- [ ] 添加测试，断言共享相册页面组件加载 `island-pages.css`，根路由不再独占该依赖。
-- [ ] 运行 `npm run test:photos`，确认测试因共享组件尚未导入样式而失败。
-- [ ] 将样式导入移动到 `PhotoArchivePage.astro`。
-- [ ] 再次运行 `npm run test:photos`，确认测试通过。
+- [x] 添加测试，断言共享相册页面组件加载 `island-pages.css`，根路由不再独占该依赖。
+- [x] 运行 `npm run test:photos`，确认测试因共享组件尚未导入样式而失败。
+- [x] 将样式导入移动到 `PhotoArchivePage.astro`。
+- [x] 再次运行 `npm run test:photos`，确认测试通过。
 
 ### Task 2: 卡片动效值与结构
 
@@ -29,11 +29,11 @@
 - Modify: `tests/photos.test.ts`
 - Modify: `src/components/photos/PhotoCard.tsx`
 
-- [ ] 添加测试，断言卡片中心点倾斜为零、边缘倾斜不超过 3 度。
-- [ ] 运行 `npm run test:photos`，确认因动效计算函数不存在而失败。
-- [ ] 实现纯函数 `getPhotoCardMotion()`，输出受限的 `rotationX`、`rotationY` 和高光偏移。
-- [ ] 为卡片补充 media、overlay、shine 的数据目标。
-- [ ] 再次运行 `npm run test:photos`，确认测试通过。
+- [x] 添加测试，断言卡片中心点倾斜为零、边缘倾斜不超过 3 度。
+- [x] 运行 `npm run test:photos`，确认因动效计算函数不存在而失败。
+- [x] 实现纯函数 `getPhotoCardMotion()`，输出受限的 `rotationX`、`rotationY` 和高光偏移。
+- [x] 为卡片补充 media、overlay、shine 的数据目标。
+- [x] 再次运行 `npm run test:photos`，确认测试通过。
 
 ### Task 3: GSAP 事件委托交互
 
@@ -41,11 +41,11 @@
 - Modify: `src/components/photos/PhotoGallery.tsx`
 - Modify: `src/components/photos/PhotoGallery.css`
 
-- [ ] 在画廊容器集中注册 pointer、focus 事件，使用 `contextSafe()` 和清理函数。
-- [ ] 使用 `gsap.quickTo()` 更新当前卡片倾斜和高光位置。
-- [ ] 增加悬停上浮、媒体放大、详情浮现、按压反馈。
-- [ ] 为触摸设备和 `prefers-reduced-motion` 提供无倾斜降级。
-- [ ] 运行完整测试和构建。
+- [x] 在画廊容器集中注册 pointer、focus 事件，使用 `contextSafe()` 和清理函数。
+- [x] 使用 `gsap.quickTo()` 更新当前卡片倾斜和高光位置。
+- [x] 增加悬停上浮、媒体放大、详情浮现、按压反馈。
+- [x] 为触摸设备和 `prefers-reduced-motion` 提供无倾斜降级。
+- [x] 运行完整测试和构建。
 
 ### Task 4: 浏览器验收
 
@@ -53,7 +53,7 @@
 - Verify: `/island/photos/`
 - Verify: `/island/photos/2026/`
 
-- [ ] 检查两条路由内容宽度一致且无横向溢出。
-- [ ] 检查桌面端 hover、focus、press 与大图点击。
-- [ ] 检查移动端单列布局和无 hover 残留。
-- [ ] 更新项目知识快照。
+- [x] 检查两条路由内容宽度一致且无横向溢出。
+- [x] 检查桌面端 hover、focus、press 与大图点击。
+- [x] 检查移动端单列布局和无 hover 残留。
+- [x] 更新项目知识快照。
