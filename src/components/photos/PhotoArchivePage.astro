@@ -1,0 +1,78 @@
+---
+import PageShell from '../island/PageShell.astro';
+import PhotoArchiveFilter from './PhotoArchiveFilter.astro';
+import PhotoGallery from './PhotoGallery';
+import { t } from '../../i18n';
+
+import type { PhotoArchivePage, getPhotoArchiveOptions } from '../../lib/photos';
+
+interface Props {
+  locale: string;
+  pageData: PhotoArchivePage;
+  archiveOptions: ReturnType<typeof getPhotoArchiveOptions>;
+}
+
+const { locale, pageData, archiveOptions } = Astro.props;
+const labels = {
+  location: t(locale, '拍摄地点'),
+  date: t(locale, '拍摄日期'),
+  camera: t(locale, '相机'),
+  lens: t(locale, '镜头'),
+  loadMore: t(locale, '加载更多'),
+  end: t(locale, '没有更多照片了'),
+  viewOriginal: t(locale, '查看大图'),
+  imageLoading: t(locale, '图片加载中'),
+  imageError: t(locale, '图片加载失败'),
+  retry: t(locale, '重试加载'),
+  previous: t(locale, '上一张'),
+  next: t(locale, '下一张'),
+  close: t(locale, '关闭大图'),
+  details: t(locale, '照片详情'),
+  currentPhoto: t(locale, '当前照片'),
+};
+---
+
+<PageShell
+  locale={locale}
+  title="海风相册"
+  description="摄影作品先以轻量缩略图和拍摄信息展示，后续再接入大图预览。"
+  kicker="摄影索引"
+  headingId="photos-title"
+  className="photo-archive-page"
+>
+  <PhotoArchiveFilter locale={locale} current={pageData.archive} options={archiveOptions} />
+
+  {
+    pageData.photos.length > 0 ? (
+      <PhotoGallery
+        initialPhotos={pageData.photos}
+        page={pageData.page}
+        totalPages={pageData.totalPages}
+        nextHref={pageData.nextHref}
+        nextDataHref={pageData.nextDataHref}
+        labels={labels}
+        client:load
+      />
+    ) : (
+      <section class="photo-gallery-empty">
+        <strong>{t(locale, '暂无照片')}</strong>
+        <a class="island-action" href="/island/photos/">{t(locale, '返回全部照片')}</a>
+      </section>
+    )
+  }
+</PageShell>
+
+<style>
+  .photo-archive-page :global(.island-content-page__hero) {
+    margin-bottom: clamp(22px, 3vw, 34px);
+  }
+
+  .photo-gallery-empty {
+    display: grid;
+    justify-items: start;
+    gap: 18px;
+    padding: 28px;
+    border: 2px dashed rgba(114, 93, 66, 0.2);
+    background: rgba(255, 252, 236, 0.72);
+  }
+</style>

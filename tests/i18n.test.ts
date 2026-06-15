@@ -60,3 +60,12 @@ test('maps photo image strategy source text to semantic keys', () => {
   assert.equal(getMessageKey('大图待补充'), 'photos.originalPending');
   assert.equal(t('en', '傍晚海边步道的摄影占位图'), 'Photography placeholder for an evening seaside walk');
 });
+
+test('maps photo archive and lightbox interface text to semantic keys', () => {
+  assert.equal(getMessageKey('全部照片'), 'photos.archive.all');
+  assert.equal(getMessageKey('加载更多'), 'photos.loadMore');
+  assert.equal(getMessageKey('上一张'), 'photos.lightbox.previous');
+  assert.equal(getMessageKey('下一张'), 'photos.lightbox.next');
+  assert.equal(getMessageKey('关闭大图'), 'photos.lightbox.close');
+  assert.equal(getMessageKey('图片加载失败'), 'photos.imageError');
+});

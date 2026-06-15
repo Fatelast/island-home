@@ -11,7 +11,8 @@
     "preview": "astro preview",
     "astro": "astro",
     "test:i18n": "node --disable-warning=ExperimentalWarning --experimental-strip-types --test tests/i18n.test.ts",
-    "test": "npm run test:i18n"
+    "test:photos": "node --disable-warning=ExperimentalWarning --experimental-strip-types --test tests/photos.test.ts",
+    "test": "npm run test:i18n && npm run test:photos"
   },
   "dependencies": {
     "@astrojs/react": "^5.0.6",
