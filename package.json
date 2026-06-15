@@ -13,7 +13,9 @@
     "test:i18n": "node --disable-warning=ExperimentalWarning --experimental-strip-types --test tests/i18n.test.ts",
     "test:photos": "node --disable-warning=ExperimentalWarning --experimental-strip-types --test tests/photos.test.ts",
     "test:content": "node --disable-warning=ExperimentalWarning --experimental-strip-types --test tests/content.test.ts",
-    "test": "npm run test:i18n && npm run test:photos && npm run test:content"
+    "test:migration": "node --disable-warning=ExperimentalWarning --experimental-strip-types --test tests/migration.test.ts",
+    "test": "npm run test:i18n && npm run test:photos && npm run test:content && npm run test:migration",
+    "migrate:sanity": "node --env-file=.env --disable-warning=ExperimentalWarning --experimental-strip-types scripts/migrate-to-sanity.ts"
   },
   "dependencies": {
     "@astrojs/react": "^5.0.6",
@@ -26,7 +28,9 @@
     "@types/react-dom": "^19.2.3",
     "animal-island-ui": "^0.9.6",
     "astro": "^6.4.4",
+    "gray-matter": "^4.0.3",
     "gsap": "^3.15.0",
+    "mdast-util-from-markdown": "^2.0.3",
     "react": "^19.2.7",
     "react-dom": "^19.2.7"
   }
