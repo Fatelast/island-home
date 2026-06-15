@@ -4,6 +4,7 @@ import test from 'node:test';
 
 import { resolveSanityConfig } from '../src/lib/content/config.ts';
 import {
+  mapNoteDocument,
   mapPhotoDocument,
   mapProfileDocument,
   mapProjectDocument,
@@ -135,4 +136,40 @@ test('project and profile pages read through the Sanity content layer', () => {
   assert.doesNotMatch(projectPage, /data\/projects/);
   assert.match(profilePage, /getProfile/);
   assert.doesNotMatch(profilePage, /data\/profile/);
+});
+
+test('maps a published note and rejects missing slugs', () => {
+  const source = {
+    _id: 'note-one',
+    title: '第一篇文章',
+    slug: 'first-note',
+    description: '摘要',
+    publishedAt: '2026-06-05T00:00:00.000Z',
+    tags: ['生活'],
+    body: [],
+  };
+  const note = mapNoteDocument(source);
+
+  assert.equal(note.slug, 'first-note');
+  assert.deepEqual(note.tags, ['生活']);
+  assert.throws(
+    () => mapNoteDocument({ ...source, slug: '' }),
+    /slug/,
+  );
+});
+
+test('note pages read through the Sanity content layer', () => {
+  const listPage = readFileSync(
+    new URL('../src/pages/island/notes/index.astro', import.meta.url),
+    'utf8',
+  );
+  const detailPage = readFileSync(
+    new URL('../src/pages/island/notes/[slug].astro', import.meta.url),
+    'utf8',
+  );
+
+  assert.match(listPage, /getNotes/);
+  assert.doesNotMatch(listPage, /getCollection/);
+  assert.match(detailPage, /getNoteBySlug/);
+  assert.doesNotMatch(detailPage, /getCollection|render\(note\)/);
 });

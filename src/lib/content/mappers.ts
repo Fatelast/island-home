@@ -1,5 +1,7 @@
 import type {
+  NoteDetail,
   PhotoItem,
+  PortableTextContent,
   Profile,
   ProjectItem,
 } from './types';
@@ -88,5 +90,33 @@ export function mapProfileDocument(
   return {
     facts: document.facts ?? [],
     links: document.links ?? [],
+  };
+}
+
+export interface NoteDocument {
+  _id: string;
+  title: string;
+  slug?: string;
+  description: string;
+  publishedAt: string;
+  tags?: string[];
+  body?: PortableTextContent;
+}
+
+export function mapNoteDocument(
+  document: NoteDocument,
+): NoteDetail {
+  if (!document.slug) {
+    throw new Error(`Missing slug for note ${document._id}`);
+  }
+
+  return {
+    id: document._id,
+    slug: document.slug,
+    title: document.title,
+    description: document.description,
+    publishedAt: document.publishedAt,
+    tags: document.tags ?? [],
+    body: document.body ?? [],
   };
 }

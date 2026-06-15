@@ -2,25 +2,25 @@
 import { t } from '../../i18n';
 import TagList from './TagList.astro';
 
-import type { CollectionEntry } from 'astro:content';
+import type { NoteSummary } from '../../lib/content/types';
 
 interface Props {
   locale: string;
-  note: CollectionEntry<'notes'>;
+  note: NoteSummary;
   formattedDate: string;
 }
 
 const { locale, note, formattedDate } = Astro.props;
 ---
 
-<a class="island-card island-card--link island-card--note" href={`/island/notes/${note.id}/`}>
+<a class="island-card island-card--link island-card--note" href={`/island/notes/${note.slug}/`}>
   <article>
     <div class="island-card__meta">
       <span class="island-pill">{formattedDate}</span>
       <span class="island-pill">{t(locale, '中文文章')}</span>
     </div>
-    <h2>{note.data.title}</h2>
-    <p>{note.data.description}</p>
-    <TagList items={note.data.tags} />
+    <h2>{note.title}</h2>
+    <p>{note.description}</p>
+    <TagList items={note.tags} />
   </article>
 </a>

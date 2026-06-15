@@ -23,3 +23,16 @@ export function createPhotoImageUrls(
       .url(),
   };
 }
+
+export function createContentImageUrl(
+  configuration: SanityConfig,
+  source: unknown,
+  width = 1600,
+) {
+  return imageUrlBuilder(configuration)
+    .image(source)
+    .width(width)
+    .fit('max')
+    .auto('format')
+    .url();
+}

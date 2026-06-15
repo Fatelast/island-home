@@ -29,3 +29,25 @@ export const PROFILE_QUERY = `*[_id == "profile" && _type == "profile"][0] {
   facts,
   links
 }`;
+
+export const NOTES_QUERY = `*[_type == "note"]
+  | order(publishedAt desc) {
+    _id,
+    title,
+    "slug": slug.current,
+    description,
+    publishedAt,
+    tags
+  }`;
+
+export const NOTE_BY_SLUG_QUERY = `*[
+  _type == "note" && slug.current == $slug
+][0] {
+  _id,
+  title,
+  "slug": slug.current,
+  description,
+  publishedAt,
+  tags,
+  body
+}`;

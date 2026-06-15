@@ -31,8 +31,19 @@ export interface NoteSummary {
   tags: string[];
 }
 
+export interface PortableTextImage {
+  _key?: string;
+  _type: 'image';
+  alt?: string;
+  asset?: unknown;
+}
+
+export type PortableTextContent = Array<
+  PortableTextBlock | PortableTextImage
+>;
+
 export interface NoteDetail extends NoteSummary {
-  body: PortableTextBlock[];
+  body: PortableTextContent;
 }
 
 export interface ProjectItem {

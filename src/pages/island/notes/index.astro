@@ -1,19 +1,16 @@
 ---
-import { getCollection } from 'astro:content';
-
 import NoteCard from '../../../components/island/NoteCard.astro';
 import PageShell from '../../../components/island/PageShell.astro';
 import BaseLayout from '../../../layouts/BaseLayout.astro';
 import { defaultLocale, t } from '../../../i18n';
+import { getNotes } from '../../../lib/content/notes';
 
 import '../../../styles/island-pages.css';
 
 const locale = Astro.currentLocale ?? defaultLocale;
 const title = '留言木屋';
 const description = '文章正文暂不纳入国际化范围，页面界面会继续跟随语言切换。';
-const notes = (await getCollection('notes')).sort(
-  (left, right) => right.data.pubDate.getTime() - left.data.pubDate.getTime(),
-);
+const notes = await getNotes();
 const dateFormatter = new Intl.DateTimeFormat(locale, { dateStyle: 'medium' });
 ---
 
@@ -22,7 +19,7 @@ const dateFormatter = new Intl.DateTimeFormat(locale, { dateStyle: 'medium' });
     <section class="island-content-page__grid island-content-page__grid--two" aria-label={t(locale, '文章列表')}>
       {
         notes.map((note) => (
-          <NoteCard locale={locale} note={note} formattedDate={dateFormatter.format(note.data.pubDate)} />
+          <NoteCard locale={locale} note={note} formattedDate={dateFormatter.format(new Date(note.publishedAt))} />
         ))
       }
     </section>
