@@ -1,4 +1,8 @@
-import type { PhotoItem } from './types';
+import type {
+  PhotoItem,
+  Profile,
+  ProjectItem,
+} from './types';
 
 export interface PhotoDocument {
   _id: string;
@@ -38,5 +42,51 @@ export function mapPhotoDocument(
     thumbnail: urls.thumbnail,
     original: urls.original,
     color: document.tone ?? 'teal',
+  };
+}
+
+export interface ProjectDocument {
+  _id: string;
+  title: string;
+  summary: string;
+  status: string;
+  techStack?: string[];
+  repoUrl?: string;
+  demoUrl?: string;
+  coverImage?: string;
+  coverTone: ProjectItem['coverTone'];
+}
+
+export function mapProjectDocument(
+  document: ProjectDocument,
+): ProjectItem {
+  return {
+    id: document._id,
+    title: document.title,
+    summary: document.summary,
+    status: document.status,
+    techStack: document.techStack ?? [],
+    repoUrl: document.repoUrl || undefined,
+    demoUrl: document.demoUrl || undefined,
+    coverImage: document.coverImage || undefined,
+    coverTone: document.coverTone,
+  };
+}
+
+export interface ProfileDocument {
+  facts?: Profile['facts'];
+  links?: Profile['links'];
+}
+
+export function mapProfileDocument(
+  document: ProfileDocument | null,
+): Profile {
+  if (!document) {
+    throw new Error('Missing profile singleton document');
+  }
+
+  return {
+    facts: document.facts ?? [],
+    links: document.links ?? [],
   };
 }

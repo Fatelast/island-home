@@ -1,8 +1,13 @@
 import assert from 'node:assert/strict';
+import { readFileSync } from 'node:fs';
 import test from 'node:test';
 
 import { resolveSanityConfig } from '../src/lib/content/config.ts';
-import { mapPhotoDocument } from '../src/lib/content/mappers.ts';
+import {
+  mapPhotoDocument,
+  mapProfileDocument,
+  mapProjectDocument,
+} from '../src/lib/content/mappers.ts';
 
 test('rejects incomplete Sanity configuration', () => {
   assert.throws(
@@ -77,4 +82,57 @@ test('maps a photo without optional metadata to a safe placeholder', () => {
   assert.equal(result.thumbnail, undefined);
   assert.equal(result.original, undefined);
   assert.equal(result.color, 'teal');
+});
+
+test('maps optional project links to undefined', () => {
+  const result = mapProjectDocument({
+    _id: 'project-one',
+    title: '项目',
+    summary: '简介',
+    status: '进行中',
+    techStack: ['Astro'],
+    coverTone: 'mint',
+  });
+
+  assert.deepEqual(result, {
+    id: 'project-one',
+    title: '项目',
+    summary: '简介',
+    status: '进行中',
+    techStack: ['Astro'],
+    repoUrl: undefined,
+    demoUrl: undefined,
+    coverImage: undefined,
+    coverTone: 'mint',
+  });
+});
+
+test('maps profile arrays and rejects a missing singleton', () => {
+  assert.deepEqual(mapProfileDocument({
+    facts: [{ label: '身份', value: '前端开发者' }],
+  }), {
+    facts: [{ label: '身份', value: '前端开发者' }],
+    links: [],
+  });
+
+  assert.throws(
+    () => mapProfileDocument(null),
+    /profile singleton/i,
+  );
+});
+
+test('project and profile pages read through the Sanity content layer', () => {
+  const projectPage = readFileSync(
+    new URL('../src/pages/island/projects/index.astro', import.meta.url),
+    'utf8',
+  );
+  const profilePage = readFileSync(
+    new URL('../src/pages/island/about/index.astro', import.meta.url),
+    'utf8',
+  );
+
+  assert.match(projectPage, /getProjects/);
+  assert.doesNotMatch(projectPage, /data\/projects/);
+  assert.match(profilePage, /getProfile/);
+  assert.doesNotMatch(profilePage, /data\/profile/);
 });

@@ -1,12 +1,13 @@
 ---
-import { profileFacts, profileLinks } from '../../../data/profile';
 import PageShell from '../../../components/island/PageShell.astro';
 import BaseLayout from '../../../layouts/BaseLayout.astro';
 import { defaultLocale, t } from '../../../i18n';
+import { getProfile } from '../../../lib/content/profile';
 
 import '../../../styles/island-pages.css';
 
 const locale = Astro.currentLocale ?? defaultLocale;
+const profile = await getProfile();
 const title = '岛民卡';
 const description = '这里会整理个人介绍、技能栈、摄影设备和联系方式。';
 ---
@@ -18,10 +19,10 @@ const description = '这里会整理个人介绍、技能栈、摄影设备和�
         <h2>{t(locale, '基础信息')}</h2>
         <div class="island-fact-list">
           {
-            profileFacts.map((fact) => (
+            profile.facts.map((fact) => (
               <div class="island-fact">
-                <span>{t(locale, fact.label)}</span>
-                <strong>{t(locale, fact.value)}</strong>
+                <span>{fact.label}</span>
+                <strong>{fact.value}</strong>
               </div>
             ))
           }
@@ -33,9 +34,9 @@ const description = '这里会整理个人介绍、技能栈、摄影设备和�
         <p>{t(locale, '第一阶段先保留公开链接，后续再补充更完整的联系方式。')}</p>
         <div class="island-card__actions">
           {
-            profileLinks.map((link) => (
+            profile.links.map((link) => (
               <a class="island-action" href={link.href} target="_blank" rel="noreferrer">
-                {t(locale, link.label)}
+                {link.label}
               </a>
             ))
           }

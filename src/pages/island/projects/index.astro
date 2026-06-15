@@ -1,13 +1,14 @@
 ---
-import { projects } from '../../../data/projects';
 import PageShell from '../../../components/island/PageShell.astro';
 import ProjectCard from '../../../components/island/ProjectCard.astro';
 import BaseLayout from '../../../layouts/BaseLayout.astro';
 import { defaultLocale, t } from '../../../i18n';
+import { getProjects } from '../../../lib/content/projects';
 
 import '../../../styles/island-pages.css';
 
 const locale = Astro.currentLocale ?? defaultLocale;
+const projects = await getProjects();
 const title = '开发工坊';
 const description = '前端项目会先以数据卡片呈现，后续逐步补充截图、仓库和线上预览。';
 ---
