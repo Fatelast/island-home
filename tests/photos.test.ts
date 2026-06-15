@@ -14,7 +14,7 @@ import {
 } from '../src/lib/photos.ts';
 import { getPhotoCardMotion } from '../src/lib/photo-card-motion.ts';
 
-import type { PhotoItem } from '../src/data/photos.ts';
+import type { PhotoItem } from '../src/lib/content/types.ts';
 
 const makePhoto = (
   id: string,

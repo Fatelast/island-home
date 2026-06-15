@@ -14,7 +14,7 @@ import PhotoLightbox from './PhotoLightbox';
 import { getPhotoCardMotion } from '../../lib/photo-card-motion';
 import { mergeUniquePhotos } from '../../lib/photos';
 
-import type { PhotoItem } from '../../data/photos';
+import type { PhotoItem } from '../../lib/content/types';
 import type { PhotoArchivePage } from '../../lib/photos';
 
 import './PhotoGallery.css';

@@ -8,7 +8,7 @@ import React, {
 
 import { getAdjacentPhotoIndex } from '../../lib/photos';
 
-import type { PhotoItem } from '../../data/photos';
+import type { PhotoItem } from '../../lib/content/types';
 import type { PhotoGalleryLabels } from './PhotoGallery';
 
 interface PhotoLightboxProps {

@@ -1,4 +1,4 @@
-import type { PhotoItem } from '../data/photos.ts';
+import type { PhotoItem } from './content/types.ts';
 
 export const PHOTO_PAGE_SIZE = 30;
 export const PANORAMA_RATIO = 2.4;
