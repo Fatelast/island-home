@@ -143,6 +143,21 @@ test('loads shared island page styles from every photo archive route', () => {
   assert.doesNotMatch(rootPage, /styles\/island-pages\.css/);
 });
 
+test('photo routes read through the Sanity content layer', () => {
+  const routeFiles = [
+    '../src/pages/island/photos/index.astro',
+    '../src/pages/island/photos/[...archive].astro',
+    '../src/pages/island/photos/data/[...archive].json.ts',
+  ];
+
+  routeFiles.forEach((routeFile) => {
+    const source = readFileSync(new URL(routeFile, import.meta.url), 'utf8');
+
+    assert.match(source, /getPhotos/);
+    assert.doesNotMatch(source, /data\/photos/);
+  });
+});
+
 test('keeps pointer-driven photo card motion centered and bounded', () => {
   assert.deepEqual(
     getPhotoCardMotion({

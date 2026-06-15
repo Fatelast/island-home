@@ -1,10 +1,11 @@
 ---
-import { photos } from '../../../data/photos';
 import PhotoArchivePage from '../../../components/photos/PhotoArchivePage.astro';
 import BaseLayout from '../../../layouts/BaseLayout.astro';
+import { getPhotos } from '../../../lib/content/photos';
 import { buildPhotoArchivePages, getPhotoArchiveOptions } from '../../../lib/photos';
 import { defaultLocale, t } from '../../../i18n';
 
+const photos = await getPhotos();
 const locale = Astro.currentLocale ?? defaultLocale;
 const title = '海风相册';
 const description = '摄影作品先以轻量缩略图和拍摄信息展示，后续再接入大图预览。';

@@ -1,9 +1,11 @@
-import { photos } from '../../../../data/photos.ts';
+import { getPhotos } from '../../../../lib/content/photos.ts';
 import { buildAllPhotoArchivePages } from '../../../../lib/photos.ts';
 
 import type { APIRoute } from 'astro';
 
-export function getStaticPaths() {
+export async function getStaticPaths() {
+  const photos = await getPhotos();
+
   return buildAllPhotoArchivePages(photos).map((pageData) => ({
     params: {
       archive: pageData.dataHref

@@ -1,6 +1,6 @@
 ---
 import PhotoArchivePage from '../../../components/photos/PhotoArchivePage.astro';
-import { photos } from '../../../data/photos';
+import { getPhotos } from '../../../lib/content/photos';
 import {
   buildAllPhotoArchivePages,
   getPhotoArchiveOptions,
@@ -8,7 +8,10 @@ import {
 import BaseLayout from '../../../layouts/BaseLayout.astro';
 import { defaultLocale, t } from '../../../i18n';
 
-export function getStaticPaths() {
+export async function getStaticPaths() {
+  const photos = await getPhotos();
+  const archiveOptions = getPhotoArchiveOptions(photos);
+
   return buildAllPhotoArchivePages(photos)
     .filter(({ href }) => href !== '/island/photos/')
     .map((pageData) => ({
@@ -17,13 +20,15 @@ export function getStaticPaths() {
           .replace('/island/photos/', '')
           .replace(/\/$/, ''),
       },
-      props: { pageData },
+      props: {
+        pageData,
+        archiveOptions,
+      },
     }));
 }
 
-const { pageData } = Astro.props;
+const { pageData, archiveOptions } = Astro.props;
 const locale = Astro.currentLocale ?? defaultLocale;
-const archiveOptions = getPhotoArchiveOptions(photos);
 const description = '摄影作品先以轻量缩略图和拍摄信息展示，后续再接入大图预览。';
 ---
 
