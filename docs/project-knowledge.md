@@ -1,57 +1,69 @@
 # 项目知识快照
 
-## 当前定位
+## 当前架构
 
-Island Home 是个人展示型静态网站，第一阶段保持静态 MVP，不引入后端、数据库、登录和后台管理。
+Island Home 是 Astro 静态站点，内容由 Sanity 托管：
+
+- Sanity Studio 负责相册、文章、项目和个人资料的编辑与发布。
+- Astro 在构建阶段读取 `production` 数据集中的已发布内容。
+- Cloudflare Pages 托管 `dist` 静态产物。
+- Sanity Webhook 调用 Cloudflare Deploy Hook，内容发布后自动重建。
+
+前台不使用 Sanity Token，`useCdn: false` 用于构建时读取最新发布数据。
+
+## 内容访问层
+
+所有页面通过 `src/lib/content/` 访问 Sanity：
+
+- `client.ts`：公开只读客户端。
+- `queries.ts`：GROQ 查询。
+- `mappers.ts`：Sanity 文档到稳定前台类型的映射。
+- `photos.ts`、`notes.ts`、`projects.ts`、`profile.ts`：按内容类型提供读取函数。
+- `image.ts`：生成 Sanity CDN 图片 URL。
+- `types.ts`：页面和组件使用的内容类型。
+
+页面不应直接调用 `sanityClient.fetch`，也不应重新引入本地静态数据。
 
 ## 当前页面
 
 - `/`：首页，小岛地图入口。
-- `/island/projects/`：开发工坊，读取 `src/data/projects.ts`。
-- `/island/photos/`：海风相册，读取 `src/data/photos.ts`。
-- `/island/notes/`：留言木屋，读取 Astro Content Collection `notes`。
-- `/island/notes/[slug]/`：文章详情页。
-- `/island/about/`：岛民卡，读取 `src/data/profile.ts`。
+- `/island/projects/`：开发工坊，读取 Sanity 项目。
+- `/island/photos/`：海风相册及年月归档，读取 Sanity 相册。
+- `/island/notes/`：文章列表，读取 Sanity 文章。
+- `/island/notes/[slug]/`：Portable Text 文章详情。
+- `/island/about/`：读取固定 ID 为 `profile` 的单例资料。
 
-## 公共组件
+## 内容模型
 
-- `src/layouts/BaseLayout.astro`：全局 HTML、导航、Cursor 包裹、基础 SEO。
-- `src/components/site/SiteHeader.astro`：顶部导航。
-- `src/components/island/PageShell.astro`：子页面统一标题区。
-- `src/components/island/ProjectCard.astro`：项目卡片。
-- `src/components/island/PhotoCard.astro`：摄影卡片。
-- `src/components/island/NoteCard.astro`：文章卡片。
-- `src/components/island/TagList.astro`：标签列表。
+- `photo`：标题、替代文本、拍摄信息、图片、占位色和排序。
+- `note`：标题、slug、摘要、发布日期、标签和 Portable Text 正文。
+- `project`：简介、状态、技术栈、链接、封面和排序。
+- `profile`：固定 `_id=profile` 的单例文档。
+
+## 迁移与回滚
+
+`scripts/migrate-to-sanity.ts` 使用稳定 `_id` 和 `createOrReplace`，可重复执行。Markdown 通过 MDAST 转为 Portable Text，不使用正则拆分正文。
+
+旧内容仍保留在：
+
+- `src/data/photos.ts`
+- `src/data/projects.ts`
+- `src/data/profile.ts`
+- `src/content/notes/*.md`
+- `src/content.config.ts`
+
+完成线上新增、修改、删除和 Webhook 验证前，不删除这些文件。
 
 ## 国际化边界
 
-当前国际化只覆盖 UI 文案和短展示文案。
+UI 文案继续使用 `t(locale, '中文原文')`。Sanity 中维护的标题、摘要、标签、资料和正文属于内容数据，直接显示，不传给 `t()`。
 
-不纳入国际化范围：
+## 部署
 
-- Markdown 文章正文。
-- 文章标题和摘要。
-- 摄影随笔正文。
+- Studio：`https://island-home.sanity.studio/`
+- Sanity 项目 ID：`ypkwhakf`
+- 数据集：`production`
+- Cloudflare 构建：`npm run test && npm run build`
+- Cloudflare 输出目录：`dist`
 
-UI 文案继续使用 `t(locale, '中文原文')`，中文原文通过 `sourceTextKeys` 反查英文语义 key。
-
-## 内容管理
-
-- 项目：静态 TS 数据。
-- 摄影：静态 TS 数据，预留 `thumbnail` 和 `original`。
-- 文章：`src/content/notes` 下的 Markdown 文件。
-
-## 图片策略
-
-- 列表页优先缩略图。
-- 原图通过 `original` 延后访问。
-- 未配置真实图片时使用渐变占位块。
-- 后续可迁移到 Cloudflare R2、OSS、COS 或图床。
-
-## 部署策略
-
-推荐优先 Cloudflare Pages 或 Vercel。
-
-- 构建命令：`npm run build`
-- 输出目录：`dist`
-- 站点 URL：通过 `SITE_URL` 环境变量配置
+具体环境变量、Deploy Hook 和 Webhook 配置见 `docs/deployment.md`。
