@@ -12,7 +12,8 @@
     "astro": "astro",
     "test:i18n": "node --disable-warning=ExperimentalWarning --experimental-strip-types --test tests/i18n.test.ts",
     "test:photos": "node --disable-warning=ExperimentalWarning --experimental-strip-types --test tests/photos.test.ts",
-    "test": "npm run test:i18n && npm run test:photos"
+    "test:motion": "node --disable-warning=ExperimentalWarning --experimental-strip-types --test tests/page-motion.test.ts",
+    "test": "npm run test:i18n && npm run test:photos && npm run test:motion"
   },
   "dependencies": {
     "@astrojs/react": "^5.0.6",

@@ -23,6 +23,13 @@ Island Home 是个人展示型静态网站，第一阶段保持静态 MVP，不�
 - `src/components/island/NoteCard.astro`：文章卡片。
 - `src/components/island/TagList.astro`：标签列表。
 
+## 动画边界
+
+- `src/scripts/pageMotion.ts` 负责页面标题、内容卡片和页面操作按钮动效。
+- 顶部导航是跨页面稳定操作区域，不参与页面进入动画。
+- 导航 hover、active、focus 仅由 `SiteHeader.astro` 的 CSS 管理，避免 GSAP 与 CSS 同时写入 `transform`。
+- 新增全局动效目标时，不要将 `.site-header` 或 `.site-header__link` 加入页面进入及通用 hover 动画。
+
 ## 国际化边界
 
 当前国际化只覆盖 UI 文案和短展示文案。
