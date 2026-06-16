@@ -3,7 +3,10 @@ import { readFileSync } from 'node:fs';
 import test from 'node:test';
 
 import { resolveSanityConfig } from '../src/lib/content/config.ts';
-import { getPhotos } from '../src/lib/content/photos.ts';
+import {
+  getPhotoFallbackDimensions,
+  getPhotos,
+} from '../src/lib/content/photos.ts';
 import { getProfile } from '../src/lib/content/profile.ts';
 import { getProjects } from '../src/lib/content/projects.ts';
 import {
@@ -99,6 +102,14 @@ test('maps a photo without optional metadata to a safe placeholder', () => {
   assert.equal(result.thumbnail, undefined);
   assert.equal(result.original, undefined);
   assert.equal(result.color, 'teal');
+});
+
+test('uses legacy dimensions for migrated Sanity photo placeholders', () => {
+  assert.deepEqual(getPhotoFallbackDimensions('photo-sunny-street-corner'), {
+    width: 4000,
+    height: 6000,
+  });
+  assert.equal(getPhotoFallbackDimensions('photo-unknown'), undefined);
 });
 
 test('maps optional project links to undefined', () => {
