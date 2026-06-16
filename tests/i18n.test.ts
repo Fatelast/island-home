@@ -69,3 +69,10 @@ test('maps photo archive and lightbox interface text to semantic keys', () => {
   assert.equal(getMessageKey('关闭大图'), 'photos.lightbox.close');
   assert.equal(getMessageKey('图片加载失败'), 'photos.imageError');
 });
+
+test('maps redesigned profile card interface text to semantic keys', () => {
+  assert.equal(getMessageKey('岛民通行证'), 'about.passport');
+  assert.equal(getMessageKey('码头联络处'), 'about.dock');
+  assert.equal(getMessageKey('小岛路线'), 'about.route');
+  assert.equal(t('en', '动效实验'), 'Motion Lab');
+});

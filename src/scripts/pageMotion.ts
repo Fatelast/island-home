@@ -29,10 +29,13 @@ const runPageMotion = () => {
       const { reduceMotion, canHover } = context.conditions ?? {};
 
       if (reduceMotion) {
-        gsap.set('.island-content-page__hero, .island-card', {
-          autoAlpha: 1,
-          clearProps: 'transform',
-        });
+        gsap.set(
+          '.island-content-page__hero, .island-card, .profile-fact-card, .profile-skill-chip, .profile-route__item',
+          {
+            autoAlpha: 1,
+            clearProps: 'transform',
+          },
+        );
         return undefined;
       }
 
@@ -66,6 +69,31 @@ const runPageMotion = () => {
           );
         },
       });
+
+      ScrollTrigger.batch(
+        '.profile-fact-card, .profile-skill-chip, .profile-route__item',
+        {
+          start: 'top 90%',
+          once: true,
+          batchMax: 6,
+          interval: 0.06,
+          onEnter: (batch) => {
+            gsap.fromTo(
+              batch,
+              { y: 16, autoAlpha: 0, scale: 0.98 },
+              {
+                y: 0,
+                autoAlpha: 1,
+                scale: 1,
+                duration: 0.46,
+                ease: 'power2.out',
+                stagger: 0.04,
+                clearProps: 'transform',
+              },
+            );
+          },
+        },
+      );
 
       if (!canHover) {
         return undefined;
