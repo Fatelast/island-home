@@ -737,8 +737,8 @@ export default function HomeIsland({ locale }: HomeIslandProps) {
       h(Footer, {
         key: 'footer',
         type: 'sea',
-      seamless: true,
-      className: 'home-island__footer',
-    }),
-  ]));
+        seamless: true,
+        className: 'home-island__footer',
+      }),
+    ]));
 }
