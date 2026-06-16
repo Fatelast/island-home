@@ -65,6 +65,13 @@ Island Home 是 Astro 静态站点，内容由 Sanity 托管：
 
 UI 文案继续使用 `t(locale, '中文原文')`。Sanity 中维护的标题、摘要、标签、资料和正文属于内容数据，直接显示，不传给 `t()`。
 
+## 内容源兜底
+
+- Sanity 配置齐全时，页面内容优先从 Sanity 读取。
+- 未配置 `PUBLIC_SANITY_PROJECT_ID`、`PUBLIC_SANITY_DATASET` 和 `SANITY_API_VERSION` 时，本地开发和静态构建回退到 `src/data/*` 与 `src/content/notes`。
+- `resolveSanityConfig()` 保持严格校验，用于迁移脚本和半配置状态；页面运行时通过可选配置创建客户端，避免模块导入阶段直接崩溃。
+- 如果只配置了一部分 Sanity 环境变量，仍应抛出配置错误，避免线上误读本地占位数据。
+
 ## 部署
 
 - Studio：`https://island-home.sanity.studio/`

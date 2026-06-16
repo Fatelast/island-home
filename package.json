@@ -14,7 +14,7 @@
     "test:photos": "node --disable-warning=ExperimentalWarning --experimental-strip-types --test tests/photos.test.ts",
     "test:content": "node --disable-warning=ExperimentalWarning --experimental-strip-types --test tests/content.test.ts",
     "test:migration": "node --disable-warning=ExperimentalWarning --experimental-strip-types --test tests/migration.test.ts",
-    "test": "npm run test:i18n && npm run test:photos && npm run test:content && npm run test:migration",
+    "test": "npm run test:i18n && npm run test:photos && npm run test:content && npm run test:migration && npm run test:motion",
     "test:motion": "node --disable-warning=ExperimentalWarning --experimental-strip-types --test tests/page-motion.test.ts",
     "migrate:sanity": "node --env-file=.env --disable-warning=ExperimentalWarning --experimental-strip-types scripts/migrate-to-sanity.ts"
   },

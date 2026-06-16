@@ -4,7 +4,7 @@ import type {
   PortableTextContent,
   Profile,
   ProjectItem,
-} from './types';
+} from './types.ts';
 
 export interface PhotoDocument {
   _id: string;

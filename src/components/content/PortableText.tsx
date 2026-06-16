@@ -19,7 +19,7 @@ interface Props {
 const components = {
   types: {
     image: ({ value }: { value: PortableTextImage }) => {
-      if (!value.asset) {
+      if (!value.asset || !sanityConfig) {
         return null;
       }
 

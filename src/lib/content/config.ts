@@ -33,3 +33,15 @@ export function resolveSanityConfig(
     apiVersion,
   };
 }
+
+export function resolveOptionalSanityConfig(
+  environment: SanityEnvironment,
+): SanityConfig | null {
+  const hasAnyValue = Boolean(
+    environment.PUBLIC_SANITY_PROJECT_ID
+      || environment.PUBLIC_SANITY_DATASET
+      || environment.SANITY_API_VERSION,
+  );
+
+  return hasAnyValue ? resolveSanityConfig(environment) : null;
+}

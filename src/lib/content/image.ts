@@ -1,6 +1,6 @@
 import imageUrlBuilder from '@sanity/image-url';
 
-import type { SanityConfig } from './config';
+import type { SanityConfig } from './config.ts';
 
 export function createPhotoImageUrls(
   configuration: SanityConfig,

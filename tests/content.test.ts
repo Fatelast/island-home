@@ -3,6 +3,9 @@ import { readFileSync } from 'node:fs';
 import test from 'node:test';
 
 import { resolveSanityConfig } from '../src/lib/content/config.ts';
+import { getPhotos } from '../src/lib/content/photos.ts';
+import { getProfile } from '../src/lib/content/profile.ts';
+import { getProjects } from '../src/lib/content/projects.ts';
 import {
   mapNoteDocument,
   mapPhotoDocument,
@@ -27,6 +30,19 @@ test('builds public read configuration without a token', () => {
     dataset: 'production',
     apiVersion: '2026-06-15',
   });
+});
+
+test('falls back to local content when Sanity environment is not configured', async () => {
+  const [photos, projects, profile] = await Promise.all([
+    getPhotos(),
+    getProjects(),
+    getProfile(),
+  ]);
+
+  assert.equal(photos.length, 4);
+  assert.equal(projects.length, 3);
+  assert.equal(profile.facts.length > 0, true);
+  assert.equal(profile.links.length > 0, true);
 });
 
 test('maps a Sanity photo to the existing gallery contract', () => {
