@@ -10,6 +10,7 @@ const locale = Astro.currentLocale ?? defaultLocale;
   locale={locale}
   title={t(locale, 'Island Home')}
   description={t(locale, '这里会慢慢收集我的前端项目、摄影作品和生活片段。')}
+  showInitialLoading
 >
   <HomeIsland locale={locale} client:only="react">
     <main class="home-fallback" slot="fallback" aria-labelledby="fallback-title">

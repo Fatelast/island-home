@@ -190,7 +190,7 @@
 }
 
 .home-island__phone-panel {
-  min-height: 460px;
+  height: 560px;
   display: grid;
   place-items: start center;
   position: relative;

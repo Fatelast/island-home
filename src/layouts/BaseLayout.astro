@@ -1,6 +1,7 @@
 ---
-import 'animal-island-ui/style';
+import 'animal-island-ui/style.css';
 
+import InitialLoadingOverlay from '../components/site/InitialLoadingOverlay';
 import SiteHeader from '../components/site/SiteHeader.astro';
 import { defaultLocale, t } from '../i18n';
 
@@ -11,6 +12,7 @@ interface Props {
   ogType?: 'website' | 'article';
   image?: string;
   noindex?: boolean;
+  showInitialLoading?: boolean;
 }
 
 const {
@@ -20,6 +22,7 @@ const {
   ogType = 'website',
   image,
   noindex = false,
+  showInitialLoading = false,
 } = Astro.props;
 
 const lang = locale === 'en' ? 'en' : 'zh-CN';
@@ -51,9 +54,23 @@ const ogLocale = lang === 'en' ? 'en_US' : 'zh_CN';
     <meta name="twitter:title" content={title} />
     <meta name="twitter:description" content={description} />
     {imageUrl && <meta name="twitter:image" content={imageUrl} />}
+    {
+      showInitialLoading && (
+        <script is:inline>
+          {`
+            try {
+              if (window.sessionStorage.getItem('island-home.initial-loading-seen') === 'true') {
+                document.documentElement.dataset.initialLoadingSeen = 'true';
+              }
+            } catch {}
+          `}
+        </script>
+      )
+    }
     <title>{title}</title>
   </head>
   <body>
+    {showInitialLoading && <InitialLoadingOverlay client:load />}
     <div class="animal-cursor animal-cursor--force site-cursor">
       <SiteHeader locale={locale} currentPath={currentPath} />
       <slot />
@@ -107,5 +124,23 @@ const ogLocale = lang === 'en' ? 'en_US' : 'zh_CN';
     min-height: 100dvh;
     display: flex;
     flex-direction: column;
+  }
+
+  .site-initial-loading {
+    position: fixed;
+    inset: 0;
+    z-index: 9999;
+    display: grid;
+    place-items: center;
+    background: #f7f3df;
+  }
+
+  html[data-initial-loading-seen="true"] .site-initial-loading {
+    display: none;
+  }
+
+  .site-initial-loading > * {
+    width: 100%;
+    height: 100%;
   }
 </style>
