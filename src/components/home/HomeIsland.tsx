@@ -1,6 +1,11 @@
 import { useGSAP } from '@gsap/react';
 import { gsap } from 'gsap';
-import { createElement as h, useEffect, useRef, useState } from 'react';
+import {
+  createElement as h,
+  useEffect,
+  useRef,
+  useState,
+} from 'react';
 
 import { t } from '../../i18n';
 
@@ -23,7 +28,14 @@ interface HomeIslandProps {
 type AnimalIslandUi = typeof import('animal-island-ui');
 type AnimalComponents = Pick<
   AnimalIslandUi,
-  'Card' | 'Cursor' | 'Divider' | 'Footer' | 'Icon' | 'Phone' | 'Time' | 'Typewriter'
+  | 'Card'
+  | 'Cursor'
+  | 'Divider'
+  | 'Footer'
+  | 'Icon'
+  | 'Phone'
+  | 'Time'
+  | 'Typewriter'
 >;
 
 const featureCards = [
@@ -67,27 +79,36 @@ const statusItems = [
 
 export default function HomeIsland({ locale }: HomeIslandProps) {
   const scopeRef = useRef<HTMLDivElement>(null);
-  const [animalComponents, setAnimalComponents] = useState<AnimalComponents | null>(null);
+  const [animalComponents, setAnimalComponents] = useState<AnimalComponents | null>(
+    null,
+  );
+  const hasAnimalComponents = Boolean(animalComponents);
 
   useEffect(() => {
     let isCancelled = false;
 
-    import('animal-island-ui').then((components) => {
-      if (isCancelled) {
-        return;
-      }
+    void import('animal-island-ui')
+      .then((components) => {
+        if (isCancelled) {
+          return;
+        }
 
-      setAnimalComponents({
-        Card: components.Card,
-        Cursor: components.Cursor,
-        Divider: components.Divider,
-        Footer: components.Footer,
-        Icon: components.Icon,
-        Phone: components.Phone,
-        Time: components.Time,
-        Typewriter: components.Typewriter,
+        setAnimalComponents({
+          Card: components.Card,
+          Cursor: components.Cursor,
+          Divider: components.Divider,
+          Footer: components.Footer,
+          Icon: components.Icon,
+          Phone: components.Phone,
+          Time: components.Time,
+          Typewriter: components.Typewriter,
+        });
+      })
+      .catch(() => {
+        if (!isCancelled) {
+          setAnimalComponents(null);
+        }
       });
-    });
 
     return () => {
       isCancelled = true;
@@ -159,13 +180,34 @@ export default function HomeIsland({ locale }: HomeIslandProps) {
           .fromTo(
             '.home-island__actions > a',
             { y: 32, scale: 0.9, autoAlpha: 0 },
-            { y: 0, scale: 1, autoAlpha: 1, ease: 'back.out(1.8)', stagger: 0.08, clearProps: 'transform' },
+            {
+              y: 0,
+              scale: 1,
+              autoAlpha: 1,
+              ease: 'back.out(1.8)',
+              stagger: 0.08,
+              clearProps: 'transform',
+            },
             '-=0.38',
           )
           .fromTo(
             '.home-island__phone-panel',
-            { x: isDesktop ? 38 : 0, y: 58, scale: 0.94, rotation: 2.4, autoAlpha: 0 },
-            { x: 0, y: 0, scale: 1, rotation: 0, autoAlpha: 1, ease: 'back.out(1.3)', clearProps: 'transform' },
+            {
+              x: isDesktop ? 38 : 0,
+              y: 58,
+              scale: 0.94,
+              rotation: 2.4,
+              autoAlpha: 0,
+            },
+            {
+              x: 0,
+              y: 0,
+              scale: 1,
+              rotation: 0,
+              autoAlpha: 1,
+              ease: 'back.out(1.3)',
+              clearProps: 'transform',
+            },
             '-=0.58',
           )
           .fromTo(
@@ -177,7 +219,14 @@ export default function HomeIsland({ locale }: HomeIslandProps) {
           .fromTo(
             '.home-island__feature-link',
             { y: 54, scale: 0.92, autoAlpha: 0 },
-            { y: 0, scale: 1, autoAlpha: 1, ease: 'back.out(1.45)', stagger: 0.08, clearProps: 'transform' },
+            {
+              y: 0,
+              scale: 1,
+              autoAlpha: 1,
+              ease: 'back.out(1.45)',
+              stagger: 0.08,
+              clearProps: 'transform',
+            },
             '-=0.16',
           )
           .fromTo(
@@ -467,16 +516,29 @@ export default function HomeIsland({ locale }: HomeIslandProps) {
     );
 
     return () => mm.revert();
-  }, { scope: scopeRef, dependencies: [Boolean(animalComponents)] });
+  }, { scope: scopeRef, dependencies: [hasAnimalComponents] });
 
   if (!animalComponents) {
-    return h('div', { ref: scopeRef, className: 'home-island-motion-scope' },
-      h('main', { className: 'home-island home-island--loading', 'aria-labelledby': 'home-title' },
+    return h(
+      'div',
+      { ref: scopeRef, className: 'home-island-motion-scope' },
+      h(
+        'main',
+        {
+          className: 'home-island home-island--loading',
+          'aria-labelledby': 'home-title',
+        },
         h('section', { className: 'home-island__shell' },
           h('div', { className: 'home-island__intro' }, [
-            h('p', { key: 'kicker', className: 'home-island__kicker' }, t(locale, '个人小岛控制台')),
+            h(
+              'p',
+              { key: 'kicker', className: 'home-island__kicker' },
+              t(locale, '个人小岛控制台'),
+            ),
             h('h1', { key: 'title', id: 'home-title' }, t(locale, 'Island Home')),
-          ]))));
+          ])),
+      ),
+    );
   }
 
   const {
@@ -490,58 +552,193 @@ export default function HomeIsland({ locale }: HomeIslandProps) {
     Typewriter,
   } = animalComponents;
 
-  return h('div', { ref: scopeRef, className: 'home-island-motion-scope' }, h(Cursor, { className: 'home-island__cursor' }, [
-    h('main', { key: 'main', className: 'home-island', 'aria-labelledby': 'home-title' },
-      h('section', { className: 'home-island__shell' }, [
-        h('div', { key: 'topbar', className: 'home-island__topbar', 'aria-label': t(locale, '小岛状态') }, [
-          h('a', { key: 'brand', className: 'home-island__brand', href: '/', 'aria-label': t(locale, '首页') }, [
-            h(Icon, { key: 'icon', name: 'icon-map', size: 28, bounce: true }),
-            h('span', { key: 'label' }, t(locale, 'Island Home')),
-          ]),
-          h(Time, { key: 'time', className: 'home-island__time' }),
-        ]),
-        h('div', { key: 'hero', className: 'home-island__hero-grid' }, [
-          h('section', { key: 'intro', className: 'home-island__intro', 'aria-labelledby': 'home-title' }, [
-            h(Card, { key: 'title-card', type: 'title', className: 'home-island__title-card' }, [
-              h('p', { key: 'kicker', className: 'home-island__kicker' }, t(locale, '个人小岛控制台')),
-              h('h1', { key: 'title', id: 'home-title' }, t(locale, 'Island Home')),
-            ]),
-            h(Card, { key: 'dialogue', className: 'home-island__dialogue' }, [
-              h('p', { key: 'role', className: 'home-island__role' }, t(locale, '前端开发者 / 摄影爱好者 / 生活记录者')),
-              h(Typewriter, { key: 'typewriter', speed: 36 },
-                h('p', null, t(locale, '这里会慢慢收集我的前端项目、摄影作品和生活片段。'))),
-            ]),
-            h('nav', { key: 'actions', className: 'home-island__actions', 'aria-label': t(locale, '首页') }, [
-              h('a', { key: 'projects', className: 'home-island__primary-link', href: '/island/projects/' }, [
-                h(Icon, { key: 'icon', name: 'icon-design', size: 24 }),
-                h('span', { key: 'label' }, t(locale, '查看项目')),
-              ]),
-              h('a', { key: 'photos', className: 'home-island__secondary-link', href: '/island/photos/' }, [
-                h(Icon, { key: 'icon', name: 'icon-camera', size: 24 }),
-                h('span', { key: 'label' }, t(locale, '浏览照片')),
-              ]),
-            ]),
-          ]),
-          h('aside', { key: 'phone-panel', className: 'home-island__phone-panel', 'aria-label': t(locale, '小岛导航') },
-            h(Phone, { className: 'home-island__phone' })),
-        ]),
-        h(Divider, { key: 'divider', type: 'wave-yellow', className: 'home-island__divider' }),
-        h('section', { key: 'features', className: 'home-island__feature-grid', 'aria-label': t(locale, '小岛入口') },
-          featureCards.map((item) => h('a', { key: item.href, className: 'home-island__feature-link', href: item.href },
-            h(Card, { color: item.color, className: 'home-island__feature-card' }, [
-              h('span', { key: 'shine', className: 'home-island__feature-shine', 'aria-hidden': 'true' }),
-              h('span', { key: 'icon-wrap', className: 'home-island__feature-icon', 'aria-hidden': 'true' },
-                h(Icon, { name: item.icon, size: 34, bounce: true })),
-              h('span', { key: 'title', className: 'home-island__feature-title' }, t(locale, item.title)),
-              h('span', { key: 'description', className: 'home-island__feature-description' },
-                t(locale, item.description)),
-            ])))),
-        h('section', { key: 'status', className: 'home-island__status-grid', 'aria-label': t(locale, '小岛状态') },
-          statusItems.map((item) => h(Card, { key: item.label, type: 'dashed', className: 'home-island__status-card' }, [
-            h('span', { key: 'label' }, t(locale, item.label)),
-            h('strong', { key: 'value' }, t(locale, item.value)),
-          ]))),
-      ])),
-    h(Footer, { key: 'footer', type: 'sea', seamless: true, className: 'home-island__footer' }),
+  const renderFeatureLink = (item: (typeof featureCards)[number]) => h(
+    'a',
+    {
+      key: item.href,
+      className: 'home-island__feature-link',
+      href: item.href,
+    },
+    h(Card, { color: item.color, className: 'home-island__feature-card' }, [
+      h(
+        'span',
+        {
+          key: 'shine',
+          className: 'home-island__feature-shine',
+          'aria-hidden': 'true',
+        },
+      ),
+      h(
+        'span',
+        {
+          key: 'icon-wrap',
+          className: 'home-island__feature-icon',
+          'aria-hidden': 'true',
+        },
+        h(Icon, { name: item.icon, size: 34, bounce: true }),
+      ),
+      h(
+        'span',
+        { key: 'title', className: 'home-island__feature-title' },
+        t(locale, item.title),
+      ),
+      h(
+        'span',
+        {
+          key: 'description',
+          className: 'home-island__feature-description',
+        },
+        t(locale, item.description),
+      ),
+    ]),
+  );
+
+  const renderStatusCard = (item: (typeof statusItems)[number]) => h(
+    Card,
+    {
+      key: item.label,
+      type: 'dashed',
+      className: 'home-island__status-card',
+    },
+    [
+      h('span', { key: 'label' }, t(locale, item.label)),
+      h('strong', { key: 'value' }, t(locale, item.value)),
+    ],
+  );
+
+  const topbar = h('div', {
+    key: 'topbar',
+    className: 'home-island__topbar',
+    'aria-label': t(locale, '小岛状态'),
+  }, [
+    h('a', {
+      key: 'brand',
+      className: 'home-island__brand',
+      href: '/',
+      'aria-label': t(locale, '首页'),
+    }, [
+      h(Icon, { key: 'icon', name: 'icon-map', size: 28, bounce: true }),
+      h('span', { key: 'label' }, t(locale, 'Island Home')),
+    ]),
+    h(Time, { key: 'time', className: 'home-island__time' }),
+  ]);
+
+  const intro = h('section', {
+    key: 'intro',
+    className: 'home-island__intro',
+    'aria-labelledby': 'home-title',
+  }, [
+    h(Card, { key: 'title-card', type: 'title', className: 'home-island__title-card' }, [
+      h(
+        'p',
+        { key: 'kicker', className: 'home-island__kicker' },
+        t(locale, '个人小岛控制台'),
+      ),
+      h('h1', { key: 'title', id: 'home-title' }, t(locale, 'Island Home')),
+    ]),
+    h(Card, { key: 'dialogue', className: 'home-island__dialogue' }, [
+      h(
+        'p',
+        { key: 'role', className: 'home-island__role' },
+        t(locale, '前端开发者 / 摄影爱好者 / 生活记录者'),
+      ),
+      h(
+        Typewriter,
+        { key: 'typewriter', speed: 36 },
+        h(
+          'p',
+          null,
+          t(locale, '这里会慢慢收集我的前端项目、摄影作品和生活片段。'),
+        ),
+      ),
+    ]),
+    h('nav', {
+      key: 'actions',
+      className: 'home-island__actions',
+      'aria-label': t(locale, '首页'),
+    }, [
+      h('a', {
+        key: 'projects',
+        className: 'home-island__primary-link',
+        href: '/island/projects/',
+      }, [
+        h(Icon, { key: 'icon', name: 'icon-design', size: 24 }),
+        h('span', { key: 'label' }, t(locale, '查看项目')),
+      ]),
+      h('a', {
+        key: 'photos',
+        className: 'home-island__secondary-link',
+        href: '/island/photos/',
+      }, [
+        h(Icon, { key: 'icon', name: 'icon-camera', size: 24 }),
+        h('span', { key: 'label' }, t(locale, '浏览照片')),
+      ]),
+    ]),
+  ]);
+
+  const phonePanel = h(
+    'aside',
+    {
+      key: 'phone-panel',
+      className: 'home-island__phone-panel',
+      'aria-label': t(locale, '小岛导航'),
+    },
+    h(Phone, { className: 'home-island__phone' }),
+  );
+
+  const hero = h('div', { key: 'hero', className: 'home-island__hero-grid' }, [
+    intro,
+    phonePanel,
+  ]);
+
+  const shell = h('section', { className: 'home-island__shell' }, [
+    topbar,
+    hero,
+    h(Divider, {
+      key: 'divider',
+      type: 'wave-yellow',
+      className: 'home-island__divider',
+    }),
+    h(
+      'section',
+      {
+        key: 'features',
+        className: 'home-island__feature-grid',
+        'aria-label': t(locale, '小岛入口'),
+      },
+      featureCards.map(renderFeatureLink),
+    ),
+    h(
+      'section',
+      {
+        key: 'status',
+        className: 'home-island__status-grid',
+        'aria-label': t(locale, '小岛状态'),
+      },
+      statusItems.map(renderStatusCard),
+    ),
+  ]);
+
+  const mainContent = h(
+    'main',
+    {
+      key: 'main',
+      className: 'home-island',
+      'aria-labelledby': 'home-title',
+    },
+    shell,
+  );
+
+  return h(
+    'div',
+    { ref: scopeRef, className: 'home-island-motion-scope' },
+    h(Cursor, { className: 'home-island__cursor' }, [
+      mainContent,
+      h(Footer, {
+        key: 'footer',
+        type: 'sea',
+      seamless: true,
+      className: 'home-island__footer',
+    }),
   ]));
 }

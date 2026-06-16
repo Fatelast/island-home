@@ -14,7 +14,7 @@ const homeIslandStyleSource = readFileSync(
 test('uses the animal island Footer seamless mode for the home sea footer', () => {
   assert.match(
     homeIslandSource,
-    /h\(Footer,\s*\{\s*key:\s*'footer',\s*type:\s*'sea',\s*seamless:\s*true,\s*className:\s*'home-island__footer'\s*\}\)/,
+    /h\(Footer,\s*\{[\s\S]*?key:\s*'footer'[\s\S]*?type:\s*'sea'[\s\S]*?seamless:\s*true[\s\S]*?className:\s*'home-island__footer'[\s\S]*?\}\)/,
   );
   assert.doesNotMatch(homeIslandStyleSource, /background-repeat:\s*repeat-x/);
   assert.doesNotMatch(homeIslandStyleSource, /background-size:\s*auto 100%/);
