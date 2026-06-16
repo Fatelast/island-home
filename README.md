@@ -42,7 +42,10 @@ t(locale, '项目作品')
 
 - `/`：小岛地图首页，展示核心入口和状态信息。
 - `/island/projects/`：开发工坊，读取 `src/data/projects.ts`。
-- `/island/photos/`：海风相册，读取 `src/data/photos.ts`。
+- `/island/photos/`：海风相册，按拍摄时间倒序展示全部照片。
+- `/island/photos/[year]/`：年份归档。
+- `/island/photos/[year]/[month]/`：月份归档。
+- `/island/photos/**/page/[page]/`：每 30 张一页的静态分页。
 - `/island/notes/`：留言木屋文章列表，读取 `src/content/notes`。
 - `/island/notes/[slug]/`：文章详情页，渲染 Markdown 内容。
 - `/island/about/`：岛民卡，读取 `src/data/profile.ts`。
@@ -69,17 +72,22 @@ t(locale, '项目作品')
 ```ts
 // src/data/photos.ts
 {
+  id: 'photo-stable-id',
   title: '照片标题',
   alt: '照片替代文本',
   location: '拍摄地点',
   date: '2026-06-05',
   camera: '相机型号',
   lens: '镜头信息',
+  width: 6000,
+  height: 4000,
   thumbnail: '/images/photos/demo-thumb.webp',
   original: '/images/photos/demo-original.webp',
   color: 'teal',
 }
 ```
+
+`id`、`width`、`height` 为必填字段。页面使用真实宽高比预留空间并判断全景照片，因此不能只填写统一占位尺寸。
 
 文章内容：
 
@@ -99,14 +107,18 @@ locale: 'zh-CN'
 
 摄影照片体积通常较大，第一版开始预留图片优化结构：
 
+- 信息流完整保留原始画幅，不裁切横片、竖片、方片或全景照片
+- 宽高比达到 `2.4` 的全景照片在桌面端自动跨两列
 - 列表页只加载缩略图，未配置缩略图时显示渐变占位块
-- 有 `original` 字段时显示大图入口
+- 原图只在打开灯箱时加载，并预加载相邻照片
 - 优先使用 `webp` 或 `avif`
 - 图片元素使用懒加载和异步解码
-- 数据结构保留 `thumbnail` 和 `original` 字段
+- 年份、月份和分页均在构建阶段生成静态 HTML 与 JSON
+- “加载更多”使用静态 JSON 渐进追加，无 JavaScript 时退化为分页链接
 - 大量图片后续可迁移到 Cloudflare R2、OSS、COS、又拍云或图床
 
 更多约定见 [图片策略](docs/image-strategy.md)。
+相册模块结构见 [相册知识快照](docs/project-knowledge/photos-gallery.md)。
 
 ## SEO
 

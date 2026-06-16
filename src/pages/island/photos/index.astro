@@ -1,25 +1,18 @@
 ---
-import { photos } from '../../../data/photos';
-import PageShell from '../../../components/island/PageShell.astro';
-import PhotoCard from '../../../components/island/PhotoCard.astro';
+import PhotoArchivePage from '../../../components/photos/PhotoArchivePage.astro';
 import BaseLayout from '../../../layouts/BaseLayout.astro';
+import { getPhotos } from '../../../lib/content/photos';
+import { buildPhotoArchivePages, getPhotoArchiveOptions } from '../../../lib/photos';
 import { defaultLocale, t } from '../../../i18n';
 
-import '../../../styles/island-pages.css';
-
+const photos = await getPhotos();
 const locale = Astro.currentLocale ?? defaultLocale;
 const title = '海风相册';
 const description = '摄影作品先以轻量缩略图和拍摄信息展示，后续再接入大图预览。';
+const pageData = buildPhotoArchivePages(photos)[0];
+const archiveOptions = getPhotoArchiveOptions(photos);
 ---
 
 <BaseLayout locale={locale} title={`${t(locale, title)} | ${t(locale, 'Island Home')}`} description={t(locale, description)}>
-  <PageShell locale={locale} title={title} description={description} kicker="摄影索引" headingId="photos-title">
-    <section class="island-content-page__grid island-content-page__grid--photos" aria-label={t(locale, '照片列表')}>
-      {
-        photos.map((photo) => (
-          <PhotoCard locale={locale} photo={photo} />
-        ))
-      }
-    </section>
-  </PageShell>
+  <PhotoArchivePage locale={locale} pageData={pageData} archiveOptions={archiveOptions} />
 </BaseLayout>

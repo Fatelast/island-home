@@ -64,16 +64,22 @@ const statusItems = [
 export default function HomeIsland({ locale }: HomeIslandProps) {
   const scopeRef = useRef<HTMLDivElement>(null);
 
-  useGSAP(() => {
+  useGSAP((_context, contextSafe) => {
     const mm = gsap.matchMedia();
 
     mm.add(
       {
         reduceMotion: '(prefers-reduced-motion: reduce)',
         isDesktop: '(min-width: 921px)',
+        canHover: '(hover: hover) and (pointer: fine)',
       },
-      (context) => {
-        const { reduceMotion, isDesktop } = context.conditions ?? {};
+      (mediaContext) => {
+        const { reduceMotion, isDesktop, canHover } = mediaContext.conditions ?? {};
+        const root = scopeRef.current;
+
+        if (!root) {
+          return undefined;
+        }
 
         if (reduceMotion) {
           gsap.set(
@@ -113,7 +119,248 @@ export default function HomeIsland({ locale }: HomeIslandProps) {
           yoyo: true,
         });
 
-        return undefined;
+        const cleanups: Array<() => void> = [];
+        const addListener = <K extends keyof HTMLElementEventMap>(
+          target: HTMLElement,
+          type: K,
+          listener: (event: HTMLElementEventMap[K]) => void,
+        ) => {
+          target.addEventListener(type, listener as EventListener);
+          cleanups.push(() => target.removeEventListener(type, listener as EventListener));
+        };
+
+        const actionLinks = gsap.utils.toArray<HTMLElement>(
+          '.home-island__primary-link, .home-island__secondary-link',
+          root,
+        );
+        const featureLinks = gsap.utils.toArray<HTMLElement>('.home-island__feature-link', root);
+
+        actionLinks.forEach((link) => {
+          const icon = link.firstElementChild as HTMLElement | null;
+          const press = contextSafe(() => {
+            gsap.to(link, {
+              scale: 0.96,
+              duration: 0.1,
+              ease: 'power2.out',
+              overwrite: 'auto',
+            });
+          });
+          const release = contextSafe(() => {
+            gsap.to(link, {
+              scale: canHover ? 1.035 : 1,
+              duration: 0.22,
+              ease: 'back.out(2)',
+              overwrite: 'auto',
+            });
+          });
+
+          addListener(link, 'pointerdown', press);
+          addListener(link, 'pointerup', release);
+          addListener(link, 'pointercancel', release);
+
+          if (!canHover) {
+            return;
+          }
+
+          const moveX = gsap.quickTo(link, 'x', { duration: 0.34, ease: 'power3.out' });
+          const moveY = gsap.quickTo(link, 'y', { duration: 0.34, ease: 'power3.out' });
+          const rotate = gsap.quickTo(link, 'rotation', { duration: 0.34, ease: 'power3.out' });
+          const enter = contextSafe(() => {
+            gsap.to(link, {
+              scale: 1.035,
+              duration: 0.24,
+              ease: 'back.out(2)',
+              overwrite: 'auto',
+            });
+            if (icon) {
+              gsap.to(icon, {
+                y: -2,
+                rotation: -5,
+                scale: 1.08,
+                duration: 0.28,
+                ease: 'back.out(2.4)',
+                overwrite: 'auto',
+              });
+            }
+          });
+          const move = contextSafe((event: PointerEvent) => {
+            const bounds = link.getBoundingClientRect();
+            const normalizedX = ((event.clientX - bounds.left) / bounds.width) - 0.5;
+            const normalizedY = ((event.clientY - bounds.top) / bounds.height) - 0.5;
+
+            moveX(normalizedX * 12);
+            moveY((normalizedY * 7) - 3);
+            rotate(normalizedX * 2);
+          });
+          const leave = contextSafe(() => {
+            moveX(0);
+            moveY(0);
+            rotate(0);
+            gsap.to(link, {
+              scale: 1,
+              duration: 0.28,
+              ease: 'power3.out',
+              overwrite: 'auto',
+            });
+            if (icon) {
+              gsap.to(icon, {
+                y: 0,
+                rotation: 0,
+                scale: 1,
+                duration: 0.28,
+                ease: 'power3.out',
+                overwrite: 'auto',
+              });
+            }
+          });
+
+          addListener(link, 'pointerenter', enter);
+          addListener(link, 'pointermove', move);
+          addListener(link, 'pointerleave', leave);
+          addListener(link, 'focus', enter);
+          addListener(link, 'blur', leave);
+        });
+
+        featureLinks.forEach((link) => {
+          const card = link.querySelector<HTMLElement>('.home-island__feature-card');
+          const icon = link.querySelector<HTMLElement>('.home-island__feature-icon');
+          const shine = link.querySelector<HTMLElement>('.home-island__feature-shine');
+
+          if (!card) {
+            return;
+          }
+
+          const press = contextSafe(() => {
+            gsap.to(card, {
+              y: canHover ? -2 : 1,
+              scale: 0.985,
+              duration: 0.1,
+              ease: 'power2.out',
+              overwrite: 'auto',
+            });
+          });
+          const release = contextSafe(() => {
+            gsap.to(card, {
+              y: canHover ? -8 : 0,
+              scale: canHover ? 1.02 : 1,
+              duration: 0.24,
+              ease: 'back.out(1.8)',
+              overwrite: 'auto',
+            });
+          });
+
+          addListener(link, 'pointerdown', press);
+          addListener(link, 'pointerup', release);
+          addListener(link, 'pointercancel', release);
+
+          if (!canHover) {
+            return;
+          }
+
+          gsap.set(card, { transformPerspective: 900, transformOrigin: 'center center' });
+          const rotateX = gsap.quickTo(card, 'rotationX', { duration: 0.38, ease: 'power3.out' });
+          const rotateY = gsap.quickTo(card, 'rotationY', { duration: 0.38, ease: 'power3.out' });
+          const enter = contextSafe(() => {
+            gsap.to(card, {
+              y: -8,
+              scale: 1.02,
+              duration: 0.3,
+              ease: 'back.out(1.8)',
+              overwrite: 'auto',
+            });
+            if (icon) {
+              gsap.to(icon, {
+                y: -5,
+                rotation: -4,
+                scale: 1.08,
+                duration: 0.32,
+                ease: 'back.out(2.2)',
+                overwrite: 'auto',
+              });
+            }
+            if (shine) {
+              gsap.fromTo(
+                shine,
+                { xPercent: -140, autoAlpha: 0 },
+                {
+                  xPercent: 150,
+                  autoAlpha: 0.72,
+                  duration: 0.68,
+                  ease: 'power2.out',
+                  overwrite: true,
+                },
+              );
+            }
+          });
+          const move = contextSafe((event: PointerEvent) => {
+            const bounds = link.getBoundingClientRect();
+            const normalizedX = ((event.clientX - bounds.left) / bounds.width) - 0.5;
+            const normalizedY = ((event.clientY - bounds.top) / bounds.height) - 0.5;
+
+            rotateX(normalizedY * -7);
+            rotateY(normalizedX * 9);
+          });
+          const leave = contextSafe(() => {
+            rotateX(0);
+            rotateY(0);
+            gsap.to(card, {
+              y: 0,
+              scale: 1,
+              duration: 0.38,
+              ease: 'power3.out',
+              overwrite: 'auto',
+            });
+            if (icon) {
+              gsap.to(icon, {
+                y: 0,
+                rotation: 0,
+                scale: 1,
+                duration: 0.32,
+                ease: 'power3.out',
+                overwrite: 'auto',
+              });
+            }
+          });
+
+          addListener(link, 'pointerenter', enter);
+          addListener(link, 'pointermove', move);
+          addListener(link, 'pointerleave', leave);
+          addListener(link, 'focus', enter);
+          addListener(link, 'blur', leave);
+        });
+
+        if (canHover) {
+          const statusCards = gsap.utils.toArray<HTMLElement>('.home-island__status-card', root);
+
+          statusCards.forEach((card) => {
+            const enter = contextSafe(() => {
+              gsap.to(card, {
+                y: -4,
+                scale: 1.012,
+                duration: 0.24,
+                ease: 'power2.out',
+                overwrite: 'auto',
+              });
+            });
+            const leave = contextSafe(() => {
+              gsap.to(card, {
+                y: 0,
+                scale: 1,
+                duration: 0.3,
+                ease: 'power3.out',
+                overwrite: 'auto',
+              });
+            });
+
+            addListener(card, 'pointerenter', enter);
+            addListener(card, 'pointerleave', leave);
+          });
+        }
+
+        return () => {
+          cleanups.forEach((cleanup) => cleanup());
+          gsap.killTweensOf([...actionLinks, ...featureLinks]);
+        };
       },
     );
 
@@ -159,6 +406,7 @@ export default function HomeIsland({ locale }: HomeIslandProps) {
         h('section', { key: 'features', className: 'home-island__feature-grid', 'aria-label': t(locale, '小岛入口') },
           featureCards.map((item) => h('a', { key: item.href, className: 'home-island__feature-link', href: item.href },
             h(Card, { color: item.color, className: 'home-island__feature-card' }, [
+              h('span', { key: 'shine', className: 'home-island__feature-shine', 'aria-hidden': 'true' }),
               h('span', { key: 'icon-wrap', className: 'home-island__feature-icon', 'aria-hidden': 'true' },
                 h(Icon, { name: item.icon, size: 34, bounce: true })),
               h('span', { key: 'title', className: 'home-island__feature-title' }, t(locale, item.title)),

@@ -1,46 +1,49 @@
 ---
-import { getCollection, render } from 'astro:content';
-
+import PortableText from '../../../components/content/PortableText';
 import TagList from '../../../components/island/TagList.astro';
 import BaseLayout from '../../../layouts/BaseLayout.astro';
 import { defaultLocale, t } from '../../../i18n';
+import {
+  getNoteBySlug,
+  getNotes,
+} from '../../../lib/content/notes';
 
 import '../../../styles/island-pages.css';
 
 export async function getStaticPaths() {
-  const notes = await getCollection('notes');
+  const notes = await getNotes();
 
   return notes.map((note) => ({
-    params: { slug: note.id },
-    props: { note },
+    params: { slug: note.slug },
+    props: { slug: note.slug },
   }));
 }
 
-const { note } = Astro.props;
+const { slug } = Astro.props;
+const note = await getNoteBySlug(slug);
 const locale = Astro.currentLocale ?? defaultLocale;
 const dateFormatter = new Intl.DateTimeFormat(locale, { dateStyle: 'medium' });
-const { Content } = await render(note);
 ---
 
 <BaseLayout
   locale={locale}
-  title={`${note.data.title} | ${t(locale, 'Island Home')}`}
-  description={note.data.description}
+  title={`${note.title} | ${t(locale, 'Island Home')}`}
+  description={note.description}
   ogType="article"
 >
   <main class="island-content-page island-note">
     <article>
       <header class="island-content-page__hero">
         <p class="island-content-page__kicker">{t(locale, '中文文章')}</p>
-        <h1>{note.data.title}</h1>
-        <p>{note.data.description}</p>
+        <h1>{note.title}</h1>
+        <p>{note.description}</p>
         <div class="island-card__meta">
-          <span class="island-pill">{dateFormatter.format(note.data.pubDate)}</span>
+          <span class="island-pill">{dateFormatter.format(new Date(note.publishedAt))}</span>
         </div>
-        <TagList items={note.data.tags} />
+        <TagList items={note.tags} />
       </header>
       <div class="island-card island-note__body">
-        <Content />
+        <PortableText value={note.body} />
       </div>
     </article>
   </main>

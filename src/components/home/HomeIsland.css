@@ -132,15 +132,18 @@
   justify-content: center;
   gap: 10px;
   padding: 10px 20px;
+  position: relative;
+  overflow: hidden;
   border: 2px solid rgba(114, 93, 66, 0.22);
   border-radius: 999px;
   font-weight: 900;
   text-decoration: none;
   transition:
-    transform 180ms ease,
     box-shadow 180ms ease,
-    background 180ms ease;
+    background 180ms ease,
+    border-color 180ms ease;
   touch-action: manipulation;
+  will-change: transform;
 }
 
 .home-island__primary-link {
@@ -153,15 +156,37 @@
   box-shadow: 0 7px 0 rgba(25, 200, 185, 0.16);
 }
 
-.home-island__primary-link:hover,
-.home-island__secondary-link:hover {
-  transform: translateY(-2px);
+.home-island__primary-link::after,
+.home-island__secondary-link::after {
+  width: 42%;
+  height: 180%;
+  content: '';
+  position: absolute;
+  top: -40%;
+  left: -55%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.58), transparent);
+  transform: skewX(-18deg);
+  transition: left 420ms ease;
+  pointer-events: none;
+}
+
+.home-island__primary-link:hover::after,
+.home-island__secondary-link:hover::after,
+.home-island__primary-link:focus-visible::after,
+.home-island__secondary-link:focus-visible::after {
+  left: 118%;
 }
 
 .home-island__primary-link:active,
 .home-island__secondary-link:active {
-  transform: translateY(2px);
   box-shadow: 0 3px 0 rgba(114, 93, 66, 0.16);
+}
+
+.home-island__primary-link:focus-visible,
+.home-island__secondary-link:focus-visible,
+.home-island__feature-link:focus-visible {
+  outline: 3px solid #168f85;
+  outline-offset: 4px;
 }
 
 .home-island__phone-panel {
@@ -209,6 +234,8 @@
   min-width: 0;
   color: inherit;
   text-decoration: none;
+  perspective: 900px;
+  touch-action: manipulation;
 }
 
 .home-island__feature-card {
@@ -216,11 +243,14 @@
   display: flex;
   flex-direction: column;
   gap: 14px;
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
   animation: home-card-rise 420ms ease-out both;
+  transform-style: preserve-3d;
   will-change: transform, opacity;
   transition:
     box-shadow 180ms ease,
-    transform 180ms ease,
     filter 180ms ease;
 }
 
@@ -233,12 +263,25 @@
 }
 
 .home-island__feature-link:hover .home-island__feature-card {
-  transform: translateY(-4px) rotate(-0.4deg);
   filter: saturate(1.04);
+  box-shadow: 0 16px 0 rgba(114, 93, 66, 0.12);
 }
 
 .home-island__feature-link:active .home-island__feature-card {
-  transform: translateY(2px) rotate(0deg);
+  box-shadow: 0 7px 0 rgba(114, 93, 66, 0.12);
+}
+
+.home-island__feature-shine {
+  width: 48%;
+  height: 180%;
+  position: absolute;
+  top: -40%;
+  left: 0;
+  z-index: 0;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.48), transparent);
+  opacity: 0;
+  transform: translateX(-140%) skewX(-16deg);
+  pointer-events: none;
 }
 
 .home-island__feature-icon {
@@ -246,16 +289,23 @@
   height: 56px;
   display: inline-grid;
   place-items: center;
+  position: relative;
+  z-index: 1;
   border-radius: 18px;
   background: rgba(255, 255, 255, 0.58);
+  will-change: transform;
 }
 
 .home-island__feature-title {
+  position: relative;
+  z-index: 1;
   font-size: 22px;
   font-weight: 900;
 }
 
 .home-island__feature-description {
+  position: relative;
+  z-index: 1;
   color: currentColor;
   font-size: 15px;
   line-height: 1.65;
@@ -272,6 +322,17 @@
 .home-island__status-card {
   display: grid;
   gap: 6px;
+  transition:
+    border-color 180ms ease,
+    box-shadow 180ms ease,
+    background-color 180ms ease;
+  will-change: transform;
+}
+
+.home-island__status-card:hover {
+  border-color: rgba(44, 143, 131, 0.46);
+  background: rgba(255, 252, 236, 0.96);
+  box-shadow: 0 10px 0 rgba(44, 143, 131, 0.1);
 }
 
 .home-island__status-card span {
@@ -295,7 +356,7 @@
   margin-right: calc(50% - 50vw);
   margin-left: calc(50% - 50vw);
   background-size: auto 100%;
-  background-repeat:repeat-x;
+  background-repeat: repeat-x;
 }
 
 @keyframes home-card-rise {
@@ -374,6 +435,14 @@
   }
 }
 
+@media (hover: none) {
+  .home-island__primary-link:active,
+  .home-island__secondary-link:active,
+  .home-island__feature-link:active .home-island__feature-card {
+    filter: brightness(0.98);
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .home-island__title-card,
   .home-island__dialogue,
@@ -383,5 +452,11 @@
   .home-island__feature-link {
     animation: none;
     transition: none;
+  }
+
+  .home-island__primary-link::after,
+  .home-island__secondary-link::after,
+  .home-island__feature-shine {
+    display: none;
   }
 }

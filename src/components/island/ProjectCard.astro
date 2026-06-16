@@ -2,7 +2,7 @@
 import { t } from '../../i18n';
 import TagList from './TagList.astro';
 
-import type { ProjectItem } from '../../data/projects';
+import type { ProjectItem } from '../../lib/content/types';
 
 interface Props {
   locale: string;
@@ -14,10 +14,10 @@ const { locale, project } = Astro.props;
 
 <article class="island-card island-card--project">
   <div class={`island-card__media island-card__media--${project.coverTone}`}>
-    <span>{t(locale, project.status)}</span>
+    <span>{project.status}</span>
   </div>
-  <h2>{t(locale, project.title)}</h2>
-  <p>{t(locale, project.summary)}</p>
+  <h2>{project.title}</h2>
+  <p>{project.summary}</p>
   <TagList items={project.techStack} ariaLabel={t(locale, '技术栈')} />
   <div class="island-card__actions">
     {

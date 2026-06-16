@@ -1,0 +1,56 @@
+---
+import { getPhotoArchiveBaseHref } from '../../lib/photos';
+import { t } from '../../i18n';
+
+import type { PhotoArchive, getPhotoArchiveOptions } from '../../lib/photos';
+
+interface Props {
+  locale: string;
+  current: PhotoArchive;
+  options: ReturnType<typeof getPhotoArchiveOptions>;
+}
+
+const { locale, current, options } = Astro.props;
+const currentYear = current.year;
+---
+
+<nav class="photo-archive-filter" aria-label={t(locale, '摄影索引')}>
+  <div class="photo-archive-filter__row">
+    <a
+      class="photo-archive-filter__link"
+      href="/island/photos/"
+      aria-current={!current.year ? 'page' : undefined}
+    >
+      {t(locale, '全部照片')}
+    </a>
+    {
+      options.map(({ year }) => (
+        <a
+          class="photo-archive-filter__link"
+          href={getPhotoArchiveBaseHref({ year })}
+          aria-current={current.year === year && !current.month ? 'page' : undefined}
+        >
+          {year}
+        </a>
+      ))
+    }
+  </div>
+
+  {
+    currentYear && (
+      <div class="photo-archive-filter__row photo-archive-filter__row--months">
+        {
+          options.find(({ year }) => year === currentYear)?.months.map((month) => (
+            <a
+              class="photo-archive-filter__link photo-archive-filter__link--month"
+              href={getPhotoArchiveBaseHref({ year: currentYear, month })}
+              aria-current={current.month === month ? 'page' : undefined}
+            >
+              {String(month).padStart(2, '0')}
+            </a>
+          ))
+        }
+      </div>
+    )
+  }
+</nav>
