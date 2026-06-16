@@ -1,6 +1,7 @@
 ---
 import { islandNavigationItems } from '../../data/islandNavigation';
 import { t } from '../../i18n';
+import { isNavigationItemActive } from '../../lib/navigation';
 
 interface Props {
   locale: string;
@@ -8,9 +9,6 @@ interface Props {
 }
 
 const { locale, currentPath } = Astro.props;
-
-const normalizePath = (path: string) => (path.endsWith('/') ? path : `${path}/`);
-const normalizedCurrentPath = normalizePath(currentPath);
 ---
 
 <header class="site-header">
@@ -21,7 +19,7 @@ const normalizedCurrentPath = normalizePath(currentPath);
   <nav class="site-header__nav" aria-label={t(locale, '小岛导航')}>
     {
       islandNavigationItems.map((item) => {
-        const isActive = normalizePath(item.href) === normalizedCurrentPath;
+        const isActive = isNavigationItemActive(item.href, currentPath);
 
         return (
           <a

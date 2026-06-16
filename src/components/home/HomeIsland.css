@@ -190,7 +190,7 @@
 }
 
 .home-island__phone-panel {
-  min-height: 460px;
+  height: 560px;
   display: grid;
   place-items: start center;
   position: relative;
@@ -355,8 +355,6 @@
   margin-top: auto;
   margin-right: calc(50% - 50vw);
   margin-left: calc(50% - 50vw);
-  background-size: auto 100%;
-  background-repeat: repeat-x;
 }
 
 @keyframes home-card-rise {

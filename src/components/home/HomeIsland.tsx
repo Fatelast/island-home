@@ -1,16 +1,6 @@
-import {
-  Card,
-  Cursor,
-  Divider,
-  Footer,
-  Icon,
-  Phone,
-  Time,
-  Typewriter,
-} from 'animal-island-ui';
 import { useGSAP } from '@gsap/react';
 import { gsap } from 'gsap';
-import { createElement as h, useRef } from 'react';
+import { createElement as h, useEffect, useRef, useState } from 'react';
 
 import { t } from '../../i18n';
 
@@ -18,9 +8,23 @@ import './HomeIsland.css';
 
 gsap.registerPlugin(useGSAP);
 
+const loadingCompleteEvent = 'island:initial-loading-complete';
+
+declare global {
+  interface Window {
+    __islandInitialLoadingComplete?: boolean;
+  }
+}
+
 interface HomeIslandProps {
   locale: string;
 }
+
+type AnimalIslandUi = typeof import('animal-island-ui');
+type AnimalComponents = Pick<
+  AnimalIslandUi,
+  'Card' | 'Cursor' | 'Divider' | 'Footer' | 'Icon' | 'Phone' | 'Time' | 'Typewriter'
+>;
 
 const featureCards = [
   {
@@ -63,6 +67,32 @@ const statusItems = [
 
 export default function HomeIsland({ locale }: HomeIslandProps) {
   const scopeRef = useRef<HTMLDivElement>(null);
+  const [animalComponents, setAnimalComponents] = useState<AnimalComponents | null>(null);
+
+  useEffect(() => {
+    let isCancelled = false;
+
+    import('animal-island-ui').then((components) => {
+      if (isCancelled) {
+        return;
+      }
+
+      setAnimalComponents({
+        Card: components.Card,
+        Cursor: components.Cursor,
+        Divider: components.Divider,
+        Footer: components.Footer,
+        Icon: components.Icon,
+        Phone: components.Phone,
+        Time: components.Time,
+        Typewriter: components.Typewriter,
+      });
+    });
+
+    return () => {
+      isCancelled = true;
+    };
+  }, []);
 
   useGSAP((_context, contextSafe) => {
     const mm = gsap.matchMedia();
@@ -98,17 +128,84 @@ export default function HomeIsland({ locale }: HomeIslandProps) {
           return undefined;
         }
 
-        const introTimeline = gsap.timeline({ defaults: { ease: 'power3.out', duration: 0.72 } });
+        const shouldWaitForInitialLoading = (
+          document.documentElement.dataset.initialLoadingSeen !== 'true'
+          && !window.__islandInitialLoadingComplete
+        );
+
+        const introTimeline = gsap.timeline({
+          paused: shouldWaitForInitialLoading,
+          defaults: { ease: 'power3.out', duration: 0.72 },
+        });
 
         introTimeline
-          .from('.home-island__topbar', { y: -18, autoAlpha: 0 })
-          .from('.home-island__title-card', { y: 34, scale: 0.98, autoAlpha: 0 }, '-=0.34')
-          .from('.home-island__dialogue', { y: 26, autoAlpha: 0 }, '-=0.46')
-          .from('.home-island__actions > a', { y: 16, autoAlpha: 0, stagger: 0.08 }, '-=0.42')
-          .from('.home-island__phone-panel', { x: isDesktop ? 42 : 0, y: 24, rotation: 1.8, autoAlpha: 0 }, '-=0.6')
-          .from('.home-island__divider', { scaleX: 0.7, autoAlpha: 0 }, '-=0.25')
-          .from('.home-island__feature-link', { y: 24, autoAlpha: 0, stagger: 0.08 }, '-=0.22')
-          .from('.home-island__status-card', { y: 18, autoAlpha: 0, stagger: 0.06 }, '-=0.36');
+          .fromTo(
+            '.home-island__topbar',
+            { y: 34, scale: 0.98, autoAlpha: 0 },
+            { y: 0, scale: 1, autoAlpha: 1, clearProps: 'transform' },
+          )
+          .fromTo(
+            '.home-island__title-card',
+            { y: 70, scale: 0.92, autoAlpha: 0 },
+            { y: 0, scale: 1, autoAlpha: 1, ease: 'back.out(1.45)', clearProps: 'transform' },
+            '-=0.28',
+          )
+          .fromTo(
+            '.home-island__dialogue',
+            { y: 48, scale: 0.96, autoAlpha: 0 },
+            { y: 0, scale: 1, autoAlpha: 1, clearProps: 'transform' },
+            '-=0.46',
+          )
+          .fromTo(
+            '.home-island__actions > a',
+            { y: 32, scale: 0.9, autoAlpha: 0 },
+            { y: 0, scale: 1, autoAlpha: 1, ease: 'back.out(1.8)', stagger: 0.08, clearProps: 'transform' },
+            '-=0.38',
+          )
+          .fromTo(
+            '.home-island__phone-panel',
+            { x: isDesktop ? 38 : 0, y: 58, scale: 0.94, rotation: 2.4, autoAlpha: 0 },
+            { x: 0, y: 0, scale: 1, rotation: 0, autoAlpha: 1, ease: 'back.out(1.3)', clearProps: 'transform' },
+            '-=0.58',
+          )
+          .fromTo(
+            '.home-island__divider',
+            { y: 22, scaleX: 0.68, autoAlpha: 0 },
+            { y: 0, scaleX: 1, autoAlpha: 1, clearProps: 'transform' },
+            '-=0.2',
+          )
+          .fromTo(
+            '.home-island__feature-link',
+            { y: 54, scale: 0.92, autoAlpha: 0 },
+            { y: 0, scale: 1, autoAlpha: 1, ease: 'back.out(1.45)', stagger: 0.08, clearProps: 'transform' },
+            '-=0.16',
+          )
+          .fromTo(
+            '.home-island__status-card',
+            { y: 34, scale: 0.95, autoAlpha: 0 },
+            { y: 0, scale: 1, autoAlpha: 1, stagger: 0.06, clearProps: 'transform' },
+            '-=0.42',
+          );
+
+        let hasPlayedIntro = false;
+        let loadingFallbackTimer: number | undefined;
+        const playIntroAfterLoading = contextSafe(() => {
+          if (hasPlayedIntro) {
+            return;
+          }
+
+          hasPlayedIntro = true;
+          if (loadingFallbackTimer) {
+            window.clearTimeout(loadingFallbackTimer);
+            loadingFallbackTimer = undefined;
+          }
+          introTimeline.play(0);
+        });
+
+        if (shouldWaitForInitialLoading) {
+          window.addEventListener(loadingCompleteEvent, playIntroAfterLoading, { once: true });
+          loadingFallbackTimer = window.setTimeout(playIntroAfterLoading, 2400);
+        }
 
         gsap.to('.home-island__phone', {
           y: -10,
@@ -358,6 +455,11 @@ export default function HomeIsland({ locale }: HomeIslandProps) {
         }
 
         return () => {
+          window.removeEventListener(loadingCompleteEvent, playIntroAfterLoading);
+          if (loadingFallbackTimer) {
+            window.clearTimeout(loadingFallbackTimer);
+          }
+          introTimeline.kill();
           cleanups.forEach((cleanup) => cleanup());
           gsap.killTweensOf([...actionLinks, ...featureLinks]);
         };
@@ -365,7 +467,28 @@ export default function HomeIsland({ locale }: HomeIslandProps) {
     );
 
     return () => mm.revert();
-  }, { scope: scopeRef });
+  }, { scope: scopeRef, dependencies: [Boolean(animalComponents)] });
+
+  if (!animalComponents) {
+    return h('div', { ref: scopeRef, className: 'home-island-motion-scope' },
+      h('main', { className: 'home-island home-island--loading', 'aria-labelledby': 'home-title' },
+        h('section', { className: 'home-island__shell' },
+          h('div', { className: 'home-island__intro' }, [
+            h('p', { key: 'kicker', className: 'home-island__kicker' }, t(locale, '个人小岛控制台')),
+            h('h1', { key: 'title', id: 'home-title' }, t(locale, 'Island Home')),
+          ]))));
+  }
+
+  const {
+    Card,
+    Cursor,
+    Divider,
+    Footer,
+    Icon,
+    Phone,
+    Time,
+    Typewriter,
+  } = animalComponents;
 
   return h('div', { ref: scopeRef, className: 'home-island-motion-scope' }, h(Cursor, { className: 'home-island__cursor' }, [
     h('main', { key: 'main', className: 'home-island', 'aria-labelledby': 'home-title' },
@@ -419,6 +542,6 @@ export default function HomeIsland({ locale }: HomeIslandProps) {
             h('strong', { key: 'value' }, t(locale, item.value)),
           ]))),
       ])),
-    h(Footer, { key: 'footer', type: 'sea', className: 'home-island__footer' }),
+    h(Footer, { key: 'footer', type: 'sea', seamless: true, className: 'home-island__footer' }),
   ]));
 }

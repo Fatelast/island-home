@@ -82,6 +82,12 @@ interface PhotoItem {
 - 键盘焦点可以显示拍摄详情，`prefers-reduced-motion` 下关闭位移和高光。
 - 全局 `pageMotion.ts` 不管理相册内部动效。
 
+## 相册分页 URL 策略
+
+相册保留静态分页 URL，用于无 JS、SEO 和直接访问。例如 `/island/photos/2026/page/2/` 可以独立渲染第 2 页。
+
+客户端“加载更多”只在当前归档 URL 内追加下一批照片，不调用 `window.history.pushState()`。这样可以避免同一个分页 URL 在直接访问和客户端累积加载路径下展示不同内容结构。
+
 ## 页面样式边界
 
 `PhotoArchivePage.astro` 统一加载 `src/styles/island-pages.css`。根相册、年份、月份和分页路由必须复用该组件，避免动态归档页面丢失 `1180px` 最大宽度与居中约束。

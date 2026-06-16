@@ -40,6 +40,7 @@ export default function PhotoLightbox({
   const previousIndex = getAdjacentPhotoIndex(currentIndex, -1, photos.length);
   const nextIndex = getAdjacentPhotoIndex(currentIndex, 1, photos.length);
   const source = photo?.original || photo?.thumbnail;
+  const isOpen = Boolean(photo);
   const canGoNext = nextIndex !== undefined || hasNextPage;
 
   const adjacentSources = useMemo(() => (
@@ -58,12 +59,6 @@ export default function PhotoLightbox({
     if (photo && !dialog.open) {
       returnFocusRef.current = document.activeElement as HTMLElement | null;
       dialog.showModal();
-      const previousOverflow = document.documentElement.style.overflow;
-      document.documentElement.style.overflow = 'hidden';
-
-      return () => {
-        document.documentElement.style.overflow = previousOverflow;
-      };
     }
 
     if (!photo && dialog.open) {
@@ -72,6 +67,19 @@ export default function PhotoLightbox({
 
     return undefined;
   }, [photo]);
+
+  useEffect(() => {
+    if (!isOpen) {
+      return undefined;
+    }
+
+    const previousOverflow = document.documentElement.style.overflow;
+    document.documentElement.style.overflow = 'hidden';
+
+    return () => {
+      document.documentElement.style.overflow = previousOverflow;
+    };
+  }, [isOpen]);
 
   useEffect(() => {
     setImageState(source ? 'loading' : 'ready');

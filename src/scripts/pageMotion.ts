@@ -30,7 +30,7 @@ const runPageMotion = () => {
 
       if (reduceMotion) {
         gsap.set(
-          '.island-content-page__hero, .island-card, .profile-fact-card, .profile-skill-chip, .profile-route__item',
+          '.island-card, .profile-fact-card, .profile-skill-chip, .profile-route__item',
           {
             autoAlpha: 1,
             clearProps: 'transform',
@@ -38,15 +38,6 @@ const runPageMotion = () => {
         );
         return undefined;
       }
-
-      gsap.from('.island-content-page__hero > *', {
-        y: 24,
-        autoAlpha: 0,
-        duration: 0.62,
-        ease: 'power3.out',
-        stagger: 0.08,
-        clearProps: 'transform',
-      });
 
       ScrollTrigger.batch('.island-card', {
         start: 'top 86%',
