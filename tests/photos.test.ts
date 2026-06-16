@@ -186,3 +186,26 @@ test('keeps pointer-driven photo card motion centered and bounded', () => {
   assert.equal(edge.shineX, 18);
   assert.equal(edge.shineY, -18);
 });
+
+test('guards photo load-more requests with a synchronous ref lock', () => {
+  const source = readFileSync(
+    new URL('../src/components/photos/PhotoGallery.tsx', import.meta.url),
+    'utf8',
+  );
+
+  assert.match(source, /const loadingRef = useRef\(false\);/);
+  assert.match(source, /if \(!nextPageDataHref \|\| loadingRef\.current\)/);
+  assert.match(source, /loadingRef\.current = true;/);
+  assert.match(source, /loadingRef\.current = false;/);
+});
+
+test('keeps incremental photo loading on the current archive URL', () => {
+  const source = readFileSync(
+    new URL('../src/components/photos/PhotoGallery.tsx', import.meta.url),
+    'utf8',
+  );
+
+  assert.doesNotMatch(source, /window\.history\.pushState/);
+  assert.doesNotMatch(source, /window\.addEventListener\('popstate'/);
+  assert.match(source, /href=\{nextPageHref\}/);
+});

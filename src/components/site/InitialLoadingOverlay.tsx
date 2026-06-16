@@ -28,24 +28,26 @@ export default function InitialLoadingOverlay() {
   useEffect(() => {
     let isCancelled = false;
 
-    import('animal-island-ui').then(({ Loading }) => {
-      if (!isCancelled) {
-        setLoadingComponent(() => Loading);
-      }
-    });
-
     try {
       if (window.sessionStorage.getItem(loadingStorageKey) === 'true') {
         window.__islandInitialLoadingComplete = true;
         setIsActive(false);
         setIsMounted(false);
-        return undefined;
+        return () => {
+          isCancelled = true;
+        };
       }
 
       window.sessionStorage.setItem(loadingStorageKey, 'true');
     } catch {
       // Storage can be unavailable in private contexts; the loading still degrades safely.
     }
+
+    import('animal-island-ui').then(({ Loading }) => {
+      if (!isCancelled) {
+        setLoadingComponent(() => Loading);
+      }
+    });
 
     const hideTimer = window.setTimeout(() => {
       announceInitialLoadingComplete();

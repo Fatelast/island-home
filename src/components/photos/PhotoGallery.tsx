@@ -64,6 +64,7 @@ export default function PhotoGallery({
   const scopeRef = useRef<HTMLDivElement>(null);
   const gridRef = useRef<HTMLDivElement>(null);
   const animationFrameRef = useRef<number>();
+  const loadingRef = useRef(false);
   const [enhanced, setEnhanced] = useState(false);
   const [batches, setBatches] = useState<PhotoBatch[]>([
     { page, photos: initialPhotos },
@@ -115,21 +116,6 @@ export default function PhotoGallery({
   useEffect(() => {
     animationFrameRef.current = requestAnimationFrame(measureCards);
   }, [batches, measureCards]);
-
-  useEffect(() => {
-    const handlePopState = () => {
-      const currentBatch = batches.find(({ page: batchPage }) => (
-        window.location.pathname.endsWith(`/page/${batchPage}/`)
-        || (batchPage === 1 && !window.location.pathname.includes('/page/'))
-      ));
-      if (currentBatch) {
-        document.querySelector(`[data-photo-batch="${currentBatch.page}"]`)
-          ?.scrollIntoView({ block: 'start' });
-      }
-    };
-    window.addEventListener('popstate', handlePopState);
-    return () => window.removeEventListener('popstate', handlePopState);
-  }, [batches]);
 
   useGSAP(() => {
     const media = gsap.matchMedia();
@@ -405,9 +391,10 @@ export default function PhotoGallery({
   }, { scope: scopeRef });
 
   const loadNextPage = useCallback(async (): Promise<PhotoItem[]> => {
-    if (!nextPageDataHref || isLoading) {
+    if (!nextPageDataHref || loadingRef.current) {
       return [];
     }
+    loadingRef.current = true;
     setIsLoading(true);
     setLoadError(false);
     try {
@@ -425,7 +412,6 @@ export default function PhotoGallery({
       });
       setNextPageHref(payload.nextHref);
       setNextPageDataHref(payload.nextDataHref);
-      window.history.pushState({ photoPage: payload.page }, '', payload.href);
 
       requestAnimationFrame(() => {
         measureCards();
@@ -445,9 +431,10 @@ export default function PhotoGallery({
       setLoadError(true);
       return [];
     } finally {
+      loadingRef.current = false;
       setIsLoading(false);
     }
-  }, [isLoading, measureCards, nextPageDataHref, photos]);
+  }, [measureCards, nextPageDataHref, photos]);
 
   return (
     <div
