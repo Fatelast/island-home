@@ -54,6 +54,13 @@ Island Home 是 Astro 静态站点，内容由 Sanity 托管：
 
 完成线上新增、修改、删除和 Webhook 验证前，不删除这些文件。
 
+## 动画边界
+
+- `src/scripts/pageMotion.ts` 负责页面标题、内容卡片和页面操作按钮动效。
+- 顶部导航是跨页面稳定操作区域，不参与页面进入动画。
+- 导航 hover、active、focus 仅由 `SiteHeader.astro` 的 CSS 管理，避免 GSAP 与 CSS 同时写入 `transform`。
+- 新增全局动效目标时，不要将 `.site-header` 或 `.site-header__link` 加入页面进入及通用 hover 动画。
+
 ## 国际化边界
 
 UI 文案继续使用 `t(locale, '中文原文')`。Sanity 中维护的标题、摘要、标签、资料和正文属于内容数据，直接显示，不传给 `t()`。

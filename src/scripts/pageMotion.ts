@@ -29,20 +29,12 @@ const runPageMotion = () => {
       const { reduceMotion, canHover } = context.conditions ?? {};
 
       if (reduceMotion) {
-        gsap.set('.site-header, .island-content-page__hero, .island-card', {
+        gsap.set('.island-content-page__hero, .island-card', {
           autoAlpha: 1,
           clearProps: 'transform',
         });
         return undefined;
       }
-
-      gsap.from('.site-header', {
-        y: -18,
-        autoAlpha: 0,
-        duration: 0.58,
-        ease: 'power3.out',
-        clearProps: 'transform',
-      });
 
       gsap.from('.island-content-page__hero > *', {
         y: 24,
@@ -80,7 +72,7 @@ const runPageMotion = () => {
       }
 
       const liftTargets = gsap.utils.toArray<HTMLElement>(
-        '.site-header__link, .island-action, .island-card--link, .island-card--project',
+        '.island-action, .island-card--link, .island-card--project',
       );
 
       const cleanups = liftTargets.map((target) => {
