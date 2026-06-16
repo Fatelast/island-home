@@ -10,38 +10,96 @@ const locale = Astro.currentLocale ?? defaultLocale;
 const profile = await getProfile();
 const title = '岛民卡';
 const description = '这里会整理个人介绍、技能栈、摄影设备和联系方式。';
+
+const profileHighlights = [
+  '界面工程',
+  '动效实验',
+  '内容站点',
+  '摄影整理',
+];
 ---
 
 <BaseLayout locale={locale} title={`${t(locale, title)} | ${t(locale, 'Island Home')}`} description={t(locale, description)}>
-  <PageShell locale={locale} title={title} description={description} kicker="个人档案" headingId="about-title">
-    <section class="island-content-page__grid island-content-page__grid--two" aria-label={t(locale, '个人信息')}>
-      <article class="island-card">
-        <h2>{t(locale, '基础信息')}</h2>
-        <div class="island-fact-list">
-          {
-            profile.facts.map((fact) => (
-              <div class="island-fact">
-                <span>{fact.label}</span>
-                <strong>{fact.value}</strong>
-              </div>
-            ))
-          }
+  <PageShell locale={locale} title={title} description={description} kicker="个人档案" headingId="about-title" className="island-profile-page">
+    <section class="profile-passport" aria-label={t(locale, '个人信息')}>
+      <article class="island-card profile-passport__main">
+        <div class="profile-passport__badge" aria-hidden="true">
+          <span></span>
+        </div>
+
+        <div class="profile-passport__content">
+          <p class="profile-passport__eyebrow">{t(locale, '岛民通行证')}</p>
+          <h2>{t(locale, '常驻岛民')}</h2>
+          <p>{t(locale, '把界面、动效、摄影和生活记录慢慢整理成一个可探索的小岛。')}</p>
+
+          <div class="profile-passport__chips" aria-label={t(locale, '岛民标签')}>
+            {
+              profileHighlights.map((highlight) => (
+                <span class="profile-skill-chip">{t(locale, highlight)}</span>
+              ))
+            }
+          </div>
+        </div>
+
+        <div class="profile-passport__visual">
+          <div class="profile-avatar" aria-hidden="true">
+            <span class="profile-avatar__sun"></span>
+            <span class="profile-avatar__island"></span>
+            <span class="profile-avatar__flag"></span>
+          </div>
+          <div class="profile-passport__stamp">{t(locale, '开放中')}</div>
         </div>
       </article>
 
-      <article class="island-card">
-        <h2>{t(locale, '联系入口')}</h2>
-        <p>{t(locale, '第一阶段先保留公开链接，后续再补充更完整的联系方式。')}</p>
-        <div class="island-card__actions">
+      <aside class="profile-passport__side" aria-label={t(locale, '基础信息')}>
+        <div class="profile-fact-list">
           {
-            profile.links.map((link) => (
-              <a class="island-action" href={link.href} target="_blank" rel="noreferrer">
-                {link.label}
-              </a>
+            profile.facts.map((fact, index) => (
+              <details class={`profile-fact-card profile-fact-card--${index + 1}`} open={index === 0}>
+                <summary>
+                  <span>{t(locale, fact.label)}</span>
+                  <strong>{t(locale, fact.value)}</strong>
+                </summary>
+                <p>{t(locale, fact.value)}</p>
+              </details>
             ))
           }
         </div>
-      </article>
+      </aside>
+    </section>
+
+    <section class="profile-dock island-card" aria-labelledby="profile-dock-title">
+      <div>
+        <p class="profile-dock__eyebrow">{t(locale, '码头联络处')}</p>
+        <h2 id="profile-dock-title">{t(locale, '联系入口')}</h2>
+        <p>{t(locale, '第一阶段先保留公开链接，后续再补充更完整的联系方式。')}</p>
+      </div>
+
+      <div class="profile-dock__links">
+        {
+          profile.links.map((link) => (
+            <a class="profile-link-card island-action" href={link.href} target="_blank" rel="noreferrer">
+              <span class="profile-link-card__mark" aria-hidden="true"></span>
+              <span>{t(locale, link.label)}</span>
+            </a>
+          ))
+        }
+      </div>
+    </section>
+
+    <section class="profile-route island-card" aria-label={t(locale, '小岛路线')}>
+      <div class="profile-route__line" aria-hidden="true">
+        <span></span>
+        <span></span>
+        <span></span>
+      </div>
+      <div class="profile-route__items">
+        {
+          ['项目', '摄影', '文章'].map((item) => (
+            <span class="profile-route__item">{t(locale, item)}</span>
+          ))
+        }
+      </div>
     </section>
   </PageShell>
 </BaseLayout>
