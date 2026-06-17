@@ -43,9 +43,7 @@ const { locale, project } = Astro.props;
         <a class="island-action island-action--quiet" href={project.demoUrl} target="_blank" rel="noreferrer">
           {t(locale, '在线预览')}
         </a>
-      ) : (
-        <span class="island-pill">{t(locale, '预览待补充')}</span>
-      )
+      ) : null
     }
   </div>
 </article>

@@ -175,6 +175,7 @@ test('project cards render Sanity cover images and open live previews in a new t
   assert.match(projectCard, /<img[\s\S]*src=\{project\.coverImage\}/);
   assert.doesNotMatch(projectCard, /island-card__media-status/);
   assert.match(projectCard, /href=\{project\.demoUrl\}[\s\S]*target="_blank"[\s\S]*rel="noreferrer"/);
+  assert.doesNotMatch(projectCard, /预览待补充/);
 });
 
 test('note body images are rendered inside a bounded figure', () => {

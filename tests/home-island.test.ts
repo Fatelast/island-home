@@ -6,10 +6,21 @@ const homeIslandSource = readFileSync(
   new URL('../src/components/home/HomeIsland.tsx', import.meta.url),
   'utf8',
 );
+const baseLayoutSource = readFileSync(
+  new URL('../src/layouts/BaseLayout.astro', import.meta.url),
+  'utf8',
+);
 const homeIslandStyleSource = readFileSync(
   new URL('../src/components/home/HomeIsland.css', import.meta.url),
   'utf8',
 );
+
+test('uses the animal island Cursor once from the shared base layout', () => {
+  assert.match(baseLayoutSource, /import \{ Cursor \} from 'animal-island-ui'/);
+  assert.match(baseLayoutSource, /<Cursor className="site-cursor">/);
+  assert.doesNotMatch(homeIslandSource, /'Cursor'/);
+  assert.doesNotMatch(homeIslandSource, /h\(Cursor/);
+});
 
 test('uses the animal island Footer seamless mode for the home sea footer', () => {
   assert.match(

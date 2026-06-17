@@ -1,6 +1,7 @@
 ---
 import 'animal-island-ui/style.css';
 
+import { Cursor } from 'animal-island-ui';
 import InitialLoadingOverlay from '../components/site/InitialLoadingOverlay';
 import SiteHeader from '../components/site/SiteHeader.astro';
 import { defaultLocale, t } from '../i18n';
@@ -71,10 +72,10 @@ const ogLocale = lang === 'en' ? 'en_US' : 'zh_CN';
   </head>
   <body>
     {showInitialLoading && <InitialLoadingOverlay client:load />}
-    <div class="animal-cursor animal-cursor--force site-cursor">
+    <Cursor className="site-cursor">
       <SiteHeader locale={locale} currentPath={currentPath} />
       <slot />
-    </div>
+    </Cursor>
     <script>
       import '../scripts/pageMotion';
     </script>

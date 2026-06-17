@@ -29,7 +29,6 @@ type AnimalIslandUi = typeof import('animal-island-ui');
 type AnimalComponents = Pick<
   AnimalIslandUi,
   | 'Card'
-  | 'Cursor'
   | 'Divider'
   | 'Footer'
   | 'Icon'
@@ -95,7 +94,6 @@ export default function HomeIsland({ locale }: HomeIslandProps) {
 
         setAnimalComponents({
           Card: components.Card,
-          Cursor: components.Cursor,
           Divider: components.Divider,
           Footer: components.Footer,
           Icon: components.Icon,
@@ -543,7 +541,6 @@ export default function HomeIsland({ locale }: HomeIslandProps) {
 
   const {
     Card,
-    Cursor,
     Divider,
     Footer,
     Icon,
@@ -732,7 +729,7 @@ export default function HomeIsland({ locale }: HomeIslandProps) {
   return h(
     'div',
     { ref: scopeRef, className: 'home-island-motion-scope' },
-    h(Cursor, { className: 'home-island__cursor' }, [
+    [
       mainContent,
       h(Footer, {
         key: 'footer',
@@ -740,5 +737,5 @@ export default function HomeIsland({ locale }: HomeIslandProps) {
         seamless: true,
         className: 'home-island__footer',
       }),
-    ]));
+    ]);
 }

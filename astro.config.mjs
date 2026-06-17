@@ -12,6 +12,11 @@ export default defineConfig({
     enabled: false,
   },
   integrations: [react()],
+  vite: {
+    resolve: {
+      noExternal: ['animal-island-ui'],
+    },
+  },
   i18n: {
     locales: ['zh-CN', 'en'],
     defaultLocale: 'zh-CN',
