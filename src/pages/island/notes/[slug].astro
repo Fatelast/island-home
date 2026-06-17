@@ -33,14 +33,21 @@ const dateFormatter = new Intl.DateTimeFormat(locale, { dateStyle: 'medium' });
 >
   <main class="island-content-page island-note">
     <article>
+      <nav class="island-note__nav" aria-label={t(locale, '文章导航')}>
+        <a class="island-note__back-link" href="/island/notes/">
+          <span aria-hidden="true">←</span>
+          {t(locale, '返回文章列表')}
+        </a>
+      </nav>
       <header class="island-content-page__hero">
-        <p class="island-content-page__kicker">{t(locale, '中文文章')}</p>
         <h1>{note.title}</h1>
         <p>{note.description}</p>
-        <div class="island-card__meta">
-          <span class="island-pill">{dateFormatter.format(new Date(note.publishedAt))}</span>
+        <div class="island-note__meta-row">
+          <div class="island-card__meta">
+            <span class="island-pill">{dateFormatter.format(new Date(note.publishedAt))}</span>
+          </div>
+          <TagList items={note.tags} />
         </div>
-        <TagList items={note.tags} />
       </header>
       <div class="island-card island-note__body">
         <PortableText value={note.body} />

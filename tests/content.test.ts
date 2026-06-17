@@ -165,6 +165,26 @@ test('project and profile pages read through the Sanity content layer', () => {
   assert.doesNotMatch(profilePage, /data\/profile/);
 });
 
+test('profile page presents an island passport before extra profile details', () => {
+  const profilePage = readFileSync(
+    new URL('../src/pages/island/about/index.astro', import.meta.url),
+    'utf8',
+  );
+
+  assert.match(profilePage, /islandFacilities/);
+  assert.match(profilePage, /residentRoster/);
+  assert.match(profilePage, /profile-island-card/);
+  assert.match(profilePage, /profile-island-photo/);
+  assert.match(profilePage, /profile-facility-board/);
+  assert.match(profilePage, /profile-resident-roster/);
+  assert.match(profilePage, /profile-contact-strip/);
+  assert.match(profilePage, /profile-detail-drawer/);
+  assert.match(profilePage, /岛屿护照/);
+  assert.match(profilePage, /岛民名册/);
+  assert.match(profilePage, /查看补充档案/);
+  assert.doesNotMatch(profilePage, /常驻岛民/);
+});
+
 test('project cards render Sanity cover images and open live previews in a new tab', () => {
   const projectCard = readFileSync(
     new URL('../src/components/island/ProjectCard.astro', import.meta.url),
@@ -248,4 +268,24 @@ test('note pages read through the Sanity content layer', () => {
   assert.doesNotMatch(listPage, /getCollection/);
   assert.match(detailPage, /getNoteBySlug/);
   assert.doesNotMatch(detailPage, /getCollection|render\(note\)/);
+});
+
+test('note detail page provides a back link to the note list', () => {
+  const detailPage = readFileSync(
+    new URL('../src/pages/island/notes/[slug].astro', import.meta.url),
+    'utf8',
+  );
+  const styles = readFileSync(
+    new URL('../src/styles/island-pages.css', import.meta.url),
+    'utf8',
+  );
+
+  assert.match(detailPage, /class="island-note__nav"/);
+  assert.match(detailPage, /class="island-note__back-link"/);
+  assert.match(detailPage, /href="\/island\/notes\/"/);
+  assert.match(detailPage, /返回文章列表/);
+  assert.match(detailPage, /class="island-note__meta-row"/);
+  assert.doesNotMatch(detailPage, /t\(locale,\s*'中文文章'\)/);
+  assert.match(styles, /\.island-note__back-link/);
+  assert.match(styles, /\.island-note__meta-row/);
 });

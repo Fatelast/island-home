@@ -73,8 +73,18 @@ test('maps photo archive and lightbox interface text to semantic keys', () => {
 });
 
 test('maps redesigned profile card interface text to semantic keys', () => {
-  assert.equal(getMessageKey('岛民通行证'), 'about.passport');
+  assert.equal(getMessageKey('岛屿护照'), 'about.islandPassport');
+  assert.equal(getMessageKey('岛屿设施'), 'about.islandFacilities');
+  assert.equal(getMessageKey('岛民名册'), 'about.residentRoster');
   assert.equal(getMessageKey('码头联络处'), 'about.dock');
   assert.equal(getMessageKey('小岛路线'), 'about.route');
-  assert.equal(t('en', '动效实验'), 'Motion Lab');
+  assert.equal(getMessageKey('查看补充档案'), 'about.viewExtraProfile');
+  assert.equal(t('en', '本岛特产'), 'Island Specialties');
+  assert.equal(t('en', '工坊店员'), 'Workshop Clerk');
+});
+
+test('maps note detail navigation text to semantic keys', () => {
+  assert.equal(getMessageKey('文章导航'), 'notes.navigation');
+  assert.equal(getMessageKey('返回文章列表'), 'notes.backToList');
+  assert.equal(t('en', '返回文章列表'), 'Back to Article List');
 });

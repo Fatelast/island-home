@@ -9,49 +9,192 @@ import '../../../styles/island-pages.css';
 const locale = Astro.currentLocale ?? defaultLocale;
 const profile = await getProfile();
 const title = '岛民卡';
-const description = '这里会整理个人介绍、技能栈、摄影设备和联系方式。';
+const description = '这里会整理岛屿设施、居民名册和对外航线。';
 
-const profileHighlights = [
-  '界面工程',
-  '动效实验',
-  '内容站点',
-  '摄影整理',
+const islandSpecialties = [
+  '前端项目',
+  '海风照片',
+  '生活文章',
+];
+
+const islandStats = [
+  {
+    label: '本岛特产',
+    value: '项目 / 摄影 / 文章',
+  },
+  {
+    label: '建设状态',
+    value: '内容扩建中',
+  },
+  {
+    label: '开放区域',
+    value: '工坊、相册、木屋',
+  },
+];
+
+const islandFacilities = [
+  {
+    label: '开发工坊',
+    value: '前端作品、GitHub 仓库和线上预览集中停靠。',
+    href: '/island/projects/',
+  },
+  {
+    label: '海风相册',
+    value: '按年份和月份整理照片，保留拍摄信息和大图入口。',
+    href: '/island/photos/',
+  },
+  {
+    label: '留言木屋',
+    value: '收纳文章、生活记录和项目建设日志。',
+    href: '/island/notes/',
+  },
+  {
+    label: '机场码头',
+    value: '连接 GitHub、项目仓库和后续公开联系方式。',
+    href: '#profile-contact-title',
+  },
+];
+
+const residentRoster = [
+  {
+    name: '工坊店员',
+    role: '界面工程',
+    description: '负责把项目页面、交互状态和部署入口整理清楚。',
+  },
+  {
+    name: '相册馆员',
+    role: '摄影整理',
+    description: '负责照片索引、拍摄信息和相册浏览体验。',
+  },
+  {
+    name: '木屋邮差',
+    role: '文章记录',
+    description: '负责 Markdown 内容、日常片段和建设日志。',
+  },
+  {
+    name: '航线向导',
+    role: '外部链接',
+    description: '负责 GitHub、项目仓库和开放入口的指引。',
+  },
 ];
 ---
 
 <BaseLayout locale={locale} title={`${t(locale, title)} | ${t(locale, 'Island Home')}`} description={t(locale, description)}>
-  <PageShell locale={locale} title={title} description={description} kicker="个人档案" headingId="about-title" className="island-profile-page">
-    <section class="profile-passport" aria-label={t(locale, '个人信息')}>
-      <article class="island-card profile-passport__main">
+  <PageShell locale={locale} title={title} description={description} kicker="岛屿档案" headingId="about-title" className="island-profile-page">
+    <section class="profile-passport" aria-label={t(locale, '岛屿档案')}>
+      <article class="island-card profile-passport__main profile-island-card">
         <div class="profile-passport__badge" aria-hidden="true">
           <span></span>
         </div>
 
         <div class="profile-passport__content">
-          <p class="profile-passport__eyebrow">{t(locale, '岛民通行证')}</p>
-          <h2>{t(locale, '常驻岛民')}</h2>
-          <p>{t(locale, '把界面、动效、摄影和生活记录慢慢整理成一个可探索的小岛。')}</p>
+          <p class="profile-passport__eyebrow">{t(locale, '岛屿护照')}</p>
+          <h2>{t(locale, 'Island Home')}</h2>
+          <p>{t(locale, '一座用前端项目、摄影作品和生活文章慢慢扩建的个人小岛。')}</p>
 
-          <div class="profile-passport__chips" aria-label={t(locale, '岛民标签')}>
+          <dl class="profile-island-card__stats" aria-label={t(locale, '岛屿概况')}>
             {
-              profileHighlights.map((highlight) => (
-                <span class="profile-skill-chip">{t(locale, highlight)}</span>
+              islandStats.map((item) => (
+                <div>
+                  <dt>{t(locale, item.label)}</dt>
+                  <dd>{t(locale, item.value)}</dd>
+                </div>
               ))
             }
+          </dl>
+
+          <div class="profile-passport__chips" aria-label={t(locale, '本岛特产')}>
+            {
+              islandSpecialties.map((specialty) => (
+                <span class="profile-skill-chip">{t(locale, specialty)}</span>
+              ))
+            }
+          </div>
+
+          <div class="profile-passport__actions" aria-label={t(locale, '主要入口')}>
+            <a class="island-action" href="/island/projects/">{t(locale, '查看项目')}</a>
+            <a class="island-action island-action--quiet" href="/island/photos/">{t(locale, '浏览照片')}</a>
           </div>
         </div>
 
         <div class="profile-passport__visual">
-          <div class="profile-avatar" aria-hidden="true">
-            <span class="profile-avatar__sun"></span>
-            <span class="profile-avatar__island"></span>
-            <span class="profile-avatar__flag"></span>
+          <div class="profile-island-photo" aria-label={t(locale, '岛屿照片')}>
+            <span class="profile-island-photo__sun"></span>
+            <span class="profile-island-photo__cloud"></span>
+            <span class="profile-island-photo__island"></span>
+            <span class="profile-island-photo__river"></span>
+            <span class="profile-island-photo__house"></span>
+            <span class="profile-island-photo__tree profile-island-photo__tree--one"></span>
+            <span class="profile-island-photo__tree profile-island-photo__tree--two"></span>
           </div>
           <div class="profile-passport__stamp">{t(locale, '开放中')}</div>
         </div>
       </article>
 
-      <aside class="profile-passport__side" aria-label={t(locale, '基础信息')}>
+      <aside class="profile-passport__side" aria-label={t(locale, '岛屿设施')}>
+        <div class="profile-facility-board island-card">
+          <p class="profile-route-board__eyebrow">{t(locale, '岛屿设施')}</p>
+          <h2>{t(locale, '今日开放设施')}</h2>
+          <div class="profile-facility-board__items">
+            {
+              islandFacilities.map((facility, index) => (
+                <a class="profile-route-card profile-facility-card" href={facility.href}>
+                  <span class="profile-route-card__index">{String(index + 1).padStart(2, '0')}</span>
+                  <div>
+                    <h3>{t(locale, facility.label)}</h3>
+                    <p>{t(locale, facility.value)}</p>
+                  </div>
+                </a>
+              ))
+            }
+          </div>
+        </div>
+      </aside>
+    </section>
+
+    <section class="profile-resident-roster island-card" aria-labelledby="profile-resident-title">
+      <div class="profile-resident-roster__head">
+        <p class="profile-dock__eyebrow">{t(locale, '岛民名册')}</p>
+        <h2 id="profile-resident-title">{t(locale, '当前常驻居民')}</h2>
+      </div>
+
+      <div class="profile-resident-roster__grid">
+        {
+          residentRoster.map((resident) => (
+            <article class="profile-resident-card">
+              <span class="profile-resident-card__avatar" aria-hidden="true"></span>
+              <div>
+                <h3>{t(locale, resident.name)}</h3>
+                <p class="profile-resident-card__role">{t(locale, resident.role)}</p>
+                <p>{t(locale, resident.description)}</p>
+              </div>
+            </article>
+          ))
+        }
+      </div>
+    </section>
+
+    <section class="profile-contact-strip island-card" aria-labelledby="profile-contact-title">
+      <div>
+        <p class="profile-dock__eyebrow">{t(locale, '码头联络处')}</p>
+        <h2 id="profile-contact-title">{t(locale, '公开链接')}</h2>
+      </div>
+
+      <div class="profile-dock__links">
+        {
+          profile.links.map((link) => (
+            <a class="profile-link-card island-action" href={link.href} target="_blank" rel="noreferrer">
+              <span class="profile-link-card__mark" aria-hidden="true"></span>
+              <span>{t(locale, link.label)}</span>
+            </a>
+          ))
+        }
+      </div>
+    </section>
+
+    <section class="profile-detail-drawer island-card" aria-label={t(locale, '补充信息')}>
+      <details>
+        <summary>{t(locale, '查看补充档案')}</summary>
         <div class="profile-fact-list">
           {
             profile.facts.map((fact, index) => (
@@ -65,26 +208,7 @@ const profileHighlights = [
             ))
           }
         </div>
-      </aside>
-    </section>
-
-    <section class="profile-dock island-card" aria-labelledby="profile-dock-title">
-      <div>
-        <p class="profile-dock__eyebrow">{t(locale, '码头联络处')}</p>
-        <h2 id="profile-dock-title">{t(locale, '联系入口')}</h2>
-        <p>{t(locale, '第一阶段先保留公开链接，后续再补充更完整的联系方式。')}</p>
-      </div>
-
-      <div class="profile-dock__links">
-        {
-          profile.links.map((link) => (
-            <a class="profile-link-card island-action" href={link.href} target="_blank" rel="noreferrer">
-              <span class="profile-link-card__mark" aria-hidden="true"></span>
-              <span>{t(locale, link.label)}</span>
-            </a>
-          ))
-        }
-      </div>
+      </details>
     </section>
 
     <section class="profile-route island-card" aria-label={t(locale, '小岛路线')}>

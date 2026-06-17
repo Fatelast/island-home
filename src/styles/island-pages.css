@@ -212,6 +212,17 @@
   background: rgba(255, 252, 236, 0.9);
 }
 
+.island-action:hover,
+.island-action:focus-visible {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 0 rgba(114, 93, 66, 0.14);
+}
+
+.island-action:active {
+  transform: translateY(1px);
+  box-shadow: 0 3px 0 rgba(114, 93, 66, 0.14);
+}
+
 .island-fact-list {
   display: grid;
   gap: 14px;
@@ -239,6 +250,57 @@
 .island-note {
   max-width: 780px;
   margin: 0 auto;
+}
+
+.island-note__nav {
+  display: flex;
+  align-items: center;
+  margin-bottom: clamp(28px, 4vw, 44px);
+}
+
+.island-note__back-link {
+  min-height: 42px;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 0 14px 0 12px;
+  border: 2px solid rgba(114, 93, 66, 0.12);
+  border-radius: 999px;
+  background: rgba(255, 252, 236, 0.82);
+  box-shadow: 0 4px 0 rgba(114, 93, 66, 0.08);
+  color: #725d42;
+  font-size: 14px;
+  font-weight: 900;
+  text-decoration: none;
+  transition:
+    transform 180ms ease,
+    box-shadow 180ms ease,
+    background 180ms ease;
+}
+
+.island-note__back-link:hover,
+.island-note__back-link:focus-visible {
+  transform: translateY(-2px);
+  background: #f7cd67;
+  box-shadow: 0 6px 0 rgba(114, 93, 66, 0.1);
+}
+
+.island-note__back-link:active {
+  transform: translateY(1px);
+  box-shadow: 0 2px 0 rgba(114, 93, 66, 0.1);
+}
+
+.island-note__meta-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  margin-top: 14px;
+}
+
+.island-note__meta-row .island-card__meta,
+.island-note__meta-row .island-card__tags {
+  margin-top: 0;
 }
 
 .island-note__body {
@@ -378,6 +440,13 @@
   gap: 10px;
 }
 
+.profile-passport__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 2px;
+}
+
 .profile-skill-chip {
   min-height: 38px;
   display: inline-flex;
@@ -501,6 +570,453 @@
 
 .profile-passport__side {
   min-width: 0;
+}
+
+.profile-island-card .profile-passport__content {
+  gap: 18px;
+}
+
+.profile-island-card .profile-passport__content h2 {
+  max-width: none;
+  font-size: clamp(38px, 6vw, 68px);
+  line-height: 1;
+}
+
+.profile-island-card__stats {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+  margin: 0;
+}
+
+.profile-island-card__stats div {
+  min-width: 0;
+  padding: 12px;
+  border: 2px dashed rgba(114, 93, 66, 0.12);
+  border-radius: 16px;
+  background: rgba(255, 252, 236, 0.68);
+}
+
+.profile-island-card__stats dt,
+.profile-island-card__stats dd {
+  margin: 0;
+}
+
+.profile-island-card__stats dt {
+  color: #2c8f83;
+  font-size: 12px;
+  font-weight: 900;
+}
+
+.profile-island-card__stats dd {
+  margin-top: 5px;
+  color: #725d42;
+  font-size: 14px;
+  font-weight: 900;
+  line-height: 1.35;
+  overflow-wrap: anywhere;
+}
+
+.profile-island-photo {
+  width: min(100%, 260px);
+  aspect-ratio: 0.86;
+  display: block;
+  position: relative;
+  z-index: 1;
+  overflow: hidden;
+  border: 2px solid rgba(114, 93, 66, 0.12);
+  border-radius: 40px;
+  background:
+    linear-gradient(180deg, rgba(146, 200, 240, 0.44) 0 43%, transparent 44%),
+    linear-gradient(180deg, #fffcec 0%, #e7f6d8 64%, #82d5bb 100%);
+  box-shadow: 0 16px 0 rgba(114, 93, 66, 0.08);
+  transform: rotate(2deg);
+  transition:
+    transform 220ms ease,
+    box-shadow 220ms ease;
+}
+
+.profile-island-card:hover .profile-island-photo {
+  transform: translateY(-4px) rotate(-1deg);
+  box-shadow: 0 20px 0 rgba(114, 93, 66, 0.08);
+}
+
+.profile-island-photo__sun {
+  width: 54px;
+  height: 54px;
+  position: absolute;
+  top: 28px;
+  right: 32px;
+  border-radius: 50%;
+  background: #f7cd67;
+  box-shadow: 0 0 0 12px rgba(247, 205, 103, 0.18);
+}
+
+.profile-island-photo__cloud {
+  width: 78px;
+  height: 24px;
+  position: absolute;
+  top: 56px;
+  left: 30px;
+  border-radius: 999px;
+  background: rgba(255, 252, 236, 0.82);
+}
+
+.profile-island-photo__cloud::before,
+.profile-island-photo__cloud::after {
+  width: 32px;
+  height: 32px;
+  content: "";
+  position: absolute;
+  bottom: 5px;
+  border-radius: 50%;
+  background: rgba(255, 252, 236, 0.82);
+}
+
+.profile-island-photo__cloud::before {
+  left: 10px;
+}
+
+.profile-island-photo__cloud::after {
+  right: 10px;
+}
+
+.profile-island-photo__island {
+  width: 168px;
+  height: 104px;
+  position: absolute;
+  right: 34px;
+  bottom: 54px;
+  border-radius: 54% 46% 44% 56%;
+  background:
+    radial-gradient(circle at 28% 36%, #f7cd67 0 8px, transparent 9px),
+    linear-gradient(180deg, #bfe6a0 0 42%, #82d5bb 43% 64%, #2c8f83 65% 100%);
+  box-shadow: inset 0 -10px 0 rgba(44, 143, 131, 0.18);
+}
+
+.profile-island-photo__river {
+  width: 118px;
+  height: 30px;
+  position: absolute;
+  right: 54px;
+  bottom: 86px;
+  border-radius: 999px;
+  background: rgba(146, 200, 240, 0.9);
+  transform: rotate(-8deg);
+}
+
+.profile-island-photo__house {
+  width: 42px;
+  height: 36px;
+  position: absolute;
+  left: 66px;
+  bottom: 126px;
+  border-radius: 8px 8px 6px 6px;
+  background: #fffcec;
+  box-shadow: inset 0 -12px 0 rgba(248, 166, 178, 0.78);
+}
+
+.profile-island-photo__house::before {
+  width: 52px;
+  height: 22px;
+  content: "";
+  position: absolute;
+  top: -15px;
+  left: -5px;
+  border-radius: 10px 10px 4px 4px;
+  background: #725d42;
+  transform: rotate(-3deg);
+}
+
+.profile-island-photo__tree {
+  width: 12px;
+  height: 34px;
+  position: absolute;
+  bottom: 106px;
+  border-radius: 999px;
+  background: #725d42;
+}
+
+.profile-island-photo__tree::before {
+  width: 42px;
+  height: 42px;
+  content: "";
+  position: absolute;
+  left: 50%;
+  bottom: 22px;
+  border-radius: 50% 50% 46% 46%;
+  background: #4ea66f;
+  transform: translateX(-50%);
+}
+
+.profile-island-photo__tree--one {
+  right: 52px;
+}
+
+.profile-island-photo__tree--two {
+  left: 46px;
+  bottom: 86px;
+  transform: scale(0.82);
+}
+
+.profile-route-board {
+  height: 100%;
+  display: grid;
+  align-content: center;
+  gap: 18px;
+  padding: clamp(22px, 3vw, 30px);
+  background:
+    radial-gradient(circle at 92% 8%, rgba(247, 205, 103, 0.28), transparent 30%),
+    linear-gradient(180deg, rgba(255, 252, 236, 0.92), rgba(221, 245, 232, 0.88));
+}
+
+.profile-facility-board {
+  height: 100%;
+  display: grid;
+  align-content: center;
+  gap: 16px;
+  padding: clamp(22px, 3vw, 30px);
+  background:
+    radial-gradient(circle at 88% 10%, rgba(247, 205, 103, 0.28), transparent 28%),
+    linear-gradient(180deg, rgba(255, 252, 236, 0.92), rgba(221, 245, 232, 0.88));
+}
+
+.profile-route-board__eyebrow {
+  width: fit-content;
+  min-height: 30px;
+  display: inline-flex;
+  align-items: center;
+  margin: 0;
+  padding: 0 12px;
+  border-radius: 999px;
+  background: rgba(130, 213, 187, 0.24);
+  color: #2c8f83;
+  font-size: 13px;
+  font-weight: 900;
+}
+
+.profile-route-board h2 {
+  max-width: 12em;
+  margin: 0;
+  color: #725d42;
+  font-size: clamp(24px, 3vw, 34px);
+  line-height: 1.18;
+}
+
+.profile-route-board__items {
+  display: grid;
+  gap: 12px;
+}
+
+.profile-facility-board__items {
+  display: grid;
+  gap: 12px;
+}
+
+.profile-route-card {
+  min-width: 0;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: 12px;
+  align-items: start;
+  padding: 14px;
+  border: 2px solid rgba(114, 93, 66, 0.1);
+  border-radius: 18px;
+  background: rgba(255, 252, 236, 0.72);
+  box-shadow: 0 5px 0 rgba(114, 93, 66, 0.06);
+  transition:
+    transform 180ms ease,
+    box-shadow 180ms ease,
+    background 180ms ease;
+}
+
+.profile-facility-card {
+  color: inherit;
+  text-decoration: none;
+}
+
+.profile-route-card:hover,
+.profile-route-card:focus-within {
+  transform: translateY(-3px);
+  background: rgba(255, 252, 236, 0.96);
+  box-shadow: 0 8px 0 rgba(114, 93, 66, 0.08);
+}
+
+.profile-route-card__index {
+  width: 42px;
+  min-height: 34px;
+  display: grid;
+  place-items: center;
+  border-radius: 999px;
+  background: #f7cd67;
+  color: #725d42;
+  font-size: 13px;
+  font-weight: 900;
+  box-shadow: 0 3px 0 rgba(114, 93, 66, 0.1);
+}
+
+.profile-route-card h3 {
+  margin: 0;
+  color: #725d42;
+  font-size: 18px;
+  line-height: 1.28;
+}
+
+.profile-route-card p {
+  margin: 6px 0 0;
+  color: #735c3d;
+  font-size: 14px;
+  line-height: 1.65;
+}
+
+.profile-resident-roster {
+  display: grid;
+  gap: 18px;
+  margin-top: 18px;
+}
+
+.profile-resident-roster__head h2 {
+  margin: 6px 0 0;
+  color: #725d42;
+  font-size: clamp(24px, 3vw, 34px);
+  line-height: 1.18;
+}
+
+.profile-resident-roster__grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 14px;
+}
+
+.profile-resident-card {
+  min-width: 0;
+  display: grid;
+  gap: 12px;
+  padding: 16px;
+  border: 2px solid rgba(114, 93, 66, 0.1);
+  border-radius: 20px;
+  background: rgba(221, 245, 232, 0.42);
+  box-shadow: 0 6px 0 rgba(114, 93, 66, 0.06);
+  transition:
+    transform 180ms ease,
+    box-shadow 180ms ease,
+    background 180ms ease;
+}
+
+.profile-resident-card:nth-child(2) {
+  background: rgba(247, 205, 103, 0.24);
+}
+
+.profile-resident-card:nth-child(3) {
+  background: rgba(248, 166, 178, 0.2);
+}
+
+.profile-resident-card:nth-child(4) {
+  background: rgba(146, 200, 240, 0.22);
+}
+
+.profile-resident-card:hover,
+.profile-resident-card:focus-within {
+  transform: translateY(-3px);
+  box-shadow: 0 9px 0 rgba(114, 93, 66, 0.08);
+  background: rgba(255, 252, 236, 0.86);
+}
+
+.profile-resident-card__avatar {
+  width: 54px;
+  height: 54px;
+  display: block;
+  border: 2px solid rgba(114, 93, 66, 0.12);
+  border-radius: 20px;
+  background:
+    radial-gradient(circle at 50% 40%, #fff6d8 0 18%, transparent 19%),
+    radial-gradient(circle at 36% 30%, #725d42 0 5%, transparent 6%),
+    radial-gradient(circle at 64% 30%, #725d42 0 5%, transparent 6%),
+    linear-gradient(135deg, #82d5bb, #f7cd67);
+  box-shadow: 0 4px 0 rgba(114, 93, 66, 0.08);
+}
+
+.profile-resident-card h3,
+.profile-resident-card p {
+  margin: 0;
+}
+
+.profile-resident-card h3 {
+  color: #725d42;
+  font-size: 20px;
+}
+
+.profile-resident-card__role {
+  margin-top: 6px;
+  color: #2c8f83;
+  font-size: 13px;
+  font-weight: 900;
+}
+
+.profile-resident-card p:not(.profile-resident-card__role) {
+  margin-top: 8px;
+  color: #735c3d;
+  font-size: 14px;
+  line-height: 1.65;
+}
+
+.profile-contact-strip {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 20px;
+  align-items: center;
+  margin-top: 18px;
+  padding-block: 18px;
+}
+
+.profile-contact-strip h2 {
+  margin: 6px 0 0;
+  color: #725d42;
+  font-size: 24px;
+}
+
+.profile-detail-drawer {
+  margin-top: 18px;
+  padding: 0;
+  overflow: hidden;
+}
+
+.profile-detail-drawer > details > summary {
+  min-height: 58px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 0 22px;
+  color: #725d42;
+  font-weight: 900;
+  cursor: pointer;
+  list-style: none;
+}
+
+.profile-detail-drawer > details > summary::-webkit-details-marker {
+  display: none;
+}
+
+.profile-detail-drawer > details > summary::after {
+  width: 28px;
+  height: 28px;
+  content: "";
+  flex: 0 0 auto;
+  border-radius: 50%;
+  background:
+    linear-gradient(#725d42, #725d42) center / 12px 2px no-repeat,
+    linear-gradient(#725d42, #725d42) center / 2px 12px no-repeat,
+    rgba(130, 213, 187, 0.3);
+  transition: transform 180ms ease;
+}
+
+.profile-detail-drawer > details[open] > summary::after {
+  transform: rotate(45deg);
+}
+
+.profile-detail-drawer .profile-fact-list {
+  padding: 0 18px 18px;
 }
 
 .profile-fact-list {
@@ -697,7 +1213,8 @@
 
   .profile-passport,
   .profile-passport__main,
-  .profile-dock {
+  .profile-dock,
+  .profile-contact-strip {
     grid-template-columns: 1fr;
   }
 
@@ -707,6 +1224,11 @@
 
   .profile-passport__visual {
     min-height: 260px;
+  }
+
+  .profile-island-card__stats,
+  .profile-resident-roster__grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
   .profile-dock__links {
@@ -743,7 +1265,7 @@
   }
 
   .profile-passport__content h2 {
-    font-size: clamp(42px, 18vw, 68px);
+    font-size: clamp(38px, 16vw, 58px);
   }
 
   .profile-passport__visual {
@@ -778,12 +1300,26 @@
     width: 100%;
     justify-content: center;
   }
+
+  .profile-route-card {
+    grid-template-columns: 1fr;
+  }
+
+  .profile-island-card__stats,
+  .profile-resident-roster__grid {
+    grid-template-columns: 1fr;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
   .island-card--link,
+  .island-action,
+  .island-note__back-link,
   .profile-skill-chip,
   .profile-fact-card,
+  .profile-island-photo,
+  .profile-resident-card,
+  .profile-route-card,
   .profile-link-card {
     transition: none;
   }
