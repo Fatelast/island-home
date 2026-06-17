@@ -77,6 +77,12 @@ const residentRoster = [
     description: '负责 GitHub、项目仓库和开放入口的指引。',
   },
 ];
+
+const contactEmail = 'l2873725607@gmail.com';
+const githubLink = {
+  label: 'GitHub',
+  href: 'https://github.com/Fatelast',
+};
 ---
 
 <BaseLayout locale={locale} title={`${t(locale, title)} | ${t(locale, 'Island Home')}`} description={t(locale, description)}>
@@ -181,14 +187,14 @@ const residentRoster = [
       </div>
 
       <div class="profile-dock__links">
-        {
-          profile.links.map((link) => (
-            <a class="profile-link-card island-action" href={link.href} target="_blank" rel="noreferrer">
-              <span class="profile-link-card__mark" aria-hidden="true"></span>
-              <span>{t(locale, link.label)}</span>
-            </a>
-          ))
-        }
+        <span class="profile-email-text">
+          <span>{t(locale, '邮箱')}</span>
+          <strong>{contactEmail}</strong>
+        </span>
+        <a class="profile-link-card island-action" href={githubLink.href} target="_blank" rel="noreferrer">
+          <span class="profile-link-card__mark" aria-hidden="true"></span>
+          <span>{t(locale, githubLink.label)}</span>
+        </a>
       </div>
     </section>
 

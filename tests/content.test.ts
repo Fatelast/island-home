@@ -178,6 +178,11 @@ test('profile page presents an island passport before extra profile details', ()
   assert.match(profilePage, /profile-facility-board/);
   assert.match(profilePage, /profile-resident-roster/);
   assert.match(profilePage, /profile-contact-strip/);
+  assert.match(profilePage, /contactEmail/);
+  assert.match(profilePage, /profile-email-text/);
+  assert.match(profilePage, /l2873725607@gmail\.com/);
+  assert.doesNotMatch(profilePage, /mailto:l2873725607@gmail\.com/);
+  assert.doesNotMatch(profilePage, /profile\.links\.map/);
   assert.match(profilePage, /profile-detail-drawer/);
   assert.match(profilePage, /岛屿护照/);
   assert.match(profilePage, /岛民名册/);

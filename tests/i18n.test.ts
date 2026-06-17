@@ -76,6 +76,7 @@ test('maps redesigned profile card interface text to semantic keys', () => {
   assert.equal(getMessageKey('岛屿护照'), 'about.islandPassport');
   assert.equal(getMessageKey('岛屿设施'), 'about.islandFacilities');
   assert.equal(getMessageKey('岛民名册'), 'about.residentRoster');
+  assert.equal(getMessageKey('邮箱'), 'about.email');
   assert.equal(getMessageKey('码头联络处'), 'about.dock');
   assert.equal(getMessageKey('小岛路线'), 'about.route');
   assert.equal(getMessageKey('查看补充档案'), 'about.viewExtraProfile');

@@ -17,6 +17,7 @@ const homeIslandStyleSource = readFileSync(
 
 test('uses the animal island Cursor once from the shared base layout', () => {
   assert.match(baseLayoutSource, /import \{ Cursor \} from 'animal-island-ui'/);
+  assert.match(baseLayoutSource, /<html class="site-cursor-root animal-cursor--force" lang=\{lang\}>/);
   assert.match(baseLayoutSource, /<Cursor className="site-cursor">/);
   assert.doesNotMatch(homeIslandSource, /'Cursor'/);
   assert.doesNotMatch(homeIslandSource, /h\(Cursor/);

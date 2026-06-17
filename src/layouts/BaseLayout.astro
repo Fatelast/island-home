@@ -34,7 +34,7 @@ const imageUrl = image && Astro.site ? new URL(image, Astro.site).toString() : i
 const ogLocale = lang === 'en' ? 'en_US' : 'zh_CN';
 ---
 
-<html lang={lang}>
+<html class="site-cursor-root animal-cursor--force" lang={lang}>
   <head>
     <meta charset="utf-8" />
     <link rel="icon" type="image/png" sizes="512x512" href="/favicon.png" />
