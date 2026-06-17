@@ -100,6 +100,7 @@ export interface NoteDocument {
   description: string;
   publishedAt: string;
   tags?: string[];
+  bodyMarkdown?: string;
   body?: PortableTextContent;
 }
 

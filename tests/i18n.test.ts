@@ -49,9 +49,11 @@ test('maps island route navigation source text to semantic keys', () => {
 
 test('maps data-driven island page source text to semantic keys', () => {
   assert.equal(getMessageKey('项目总览'), 'projects.overview');
-  assert.equal(getMessageKey('个人主页重构'), 'projects.islandHome.title');
+  assert.equal(getMessageKey('SaveMyParking（挪车宝）'), 'projects.saveMyParking.title');
+  assert.equal(getMessageKey('持续维护'), 'projects.status.maintained');
   assert.equal(getMessageKey('摄影索引'), 'photos.index');
   assert.equal(getMessageKey('文章正文暂不纳入国际化范围，页面界面会继续跟随语言切换。'), 'notes.description');
+  assert.equal(t('en', '原型可用'), 'Prototype Ready');
   assert.equal(t('en', '中文文章'), 'Chinese Article');
 });
 

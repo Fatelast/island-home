@@ -165,6 +165,54 @@ test('project and profile pages read through the Sanity content layer', () => {
   assert.doesNotMatch(profilePage, /data\/profile/);
 });
 
+test('project cards render Sanity cover images and open live previews in a new tab', () => {
+  const projectCard = readFileSync(
+    new URL('../src/components/island/ProjectCard.astro', import.meta.url),
+    'utf8',
+  );
+
+  assert.match(projectCard, /project\.coverImage\s*\?\s*\(/);
+  assert.match(projectCard, /<img[\s\S]*src=\{project\.coverImage\}/);
+  assert.doesNotMatch(projectCard, /island-card__media-status/);
+  assert.match(projectCard, /href=\{project\.demoUrl\}[\s\S]*target="_blank"[\s\S]*rel="noreferrer"/);
+});
+
+test('note body images are rendered inside a bounded figure', () => {
+  const portableText = readFileSync(
+    new URL('../src/components/content/PortableText.tsx', import.meta.url),
+    'utf8',
+  );
+  const styles = readFileSync(
+    new URL('../src/styles/island-pages.css', import.meta.url),
+    'utf8',
+  );
+
+  assert.match(portableText, /<figure className="island-note__image">/);
+  assert.match(styles, /\.island-note__body img\s*\{[\s\S]*max-width:\s*100%/);
+  assert.match(styles, /\.island-note__image\s*\{[\s\S]*overflow:\s*hidden/);
+});
+
+test('Sanity notes can fall back to a Markdown body field', () => {
+  const noteSchema = readFileSync(
+    new URL('../studio/schemaTypes/note.ts', import.meta.url),
+    'utf8',
+  );
+  const queries = readFileSync(
+    new URL('../src/lib/content/queries.ts', import.meta.url),
+    'utf8',
+  );
+  const notes = readFileSync(
+    new URL('../src/lib/content/notes.ts', import.meta.url),
+    'utf8',
+  );
+
+  assert.match(noteSchema, /name:\s*'bodyMarkdown'/);
+  assert.match(noteSchema, /正文或 Markdown 正文至少填写一项/);
+  assert.match(queries, /bodyMarkdown/);
+  assert.match(notes, /withMarkdownFallback/);
+  assert.match(notes, /markdownToPortableText\(document\.bodyMarkdown\)/);
+});
+
 test('maps a published note and rejects missing slugs', () => {
   const source = {
     _id: 'note-one',

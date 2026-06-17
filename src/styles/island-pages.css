@@ -96,9 +96,10 @@
   max-width: 100%;
   height: clamp(132px, 11vw, 168px);
   display: grid;
-  place-items: end start;
+  align-items: end;
   margin: 0 0 18px;
   padding: 18px;
+  position: relative;
   border-radius: 18px;
   color: #fff;
   font-weight: 900;
@@ -111,6 +112,9 @@
   display: block;
   margin: -18px;
   object-fit: cover;
+  position: absolute;
+  inset: 0;
+  z-index: 0;
 }
 
 .island-card__media--mint {
@@ -246,6 +250,31 @@
 
 .island-note__body p {
   margin: 0 0 18px;
+}
+
+.island-note__body img {
+  width: 100%;
+  max-width: 100%;
+  height: auto;
+  display: block;
+  border-radius: 18px;
+  object-fit: contain;
+}
+
+.island-note__image {
+  width: min(100%, 100%);
+  margin: 24px 0;
+  overflow: hidden;
+  border: 2px solid rgba(114, 93, 66, 0.12);
+  border-radius: 20px;
+  background: rgba(255, 252, 236, 0.72);
+}
+
+.island-note__image figcaption {
+  padding: 10px 14px;
+  color: #735c3d;
+  font-size: 14px;
+  line-height: 1.5;
 }
 
 .island-note__body h2,

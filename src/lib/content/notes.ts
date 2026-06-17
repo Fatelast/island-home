@@ -33,6 +33,17 @@ async function getLocalNotes() {
   return getCollection('notes') as Promise<LocalNoteEntry[]>;
 }
 
+function withMarkdownFallback(document: NoteDocument): NoteDocument {
+  if (document.body?.length || !document.bodyMarkdown?.trim()) {
+    return document;
+  }
+
+  return {
+    ...document,
+    body: markdownToPortableText(document.bodyMarkdown),
+  };
+}
+
 export async function getNotes(): Promise<NoteSummary[]> {
   if (!sanityClient) {
     const notes = await getLocalNotes();
@@ -88,5 +99,5 @@ export async function getNoteBySlug(
     throw new Error(`Missing published note for slug: ${slug}`);
   }
 
-  return mapNoteDocument(document);
+  return mapNoteDocument(withMarkdownFallback(document));
 }

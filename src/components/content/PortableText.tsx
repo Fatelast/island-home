@@ -23,13 +23,18 @@ const components = {
         return null;
       }
 
+      const alt = value.alt ?? '';
+
       return (
-        <img
-          src={createContentImageUrl(sanityConfig, value)}
-          alt={value.alt ?? ''}
-          loading="lazy"
-          decoding="async"
-        />
+        <figure className="island-note__image">
+          <img
+            src={createContentImageUrl(sanityConfig, value)}
+            alt={alt}
+            loading="lazy"
+            decoding="async"
+          />
+          {alt ? <figcaption>{alt}</figcaption> : null}
+        </figure>
       );
     },
   },

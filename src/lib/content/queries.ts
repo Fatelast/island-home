@@ -49,5 +49,6 @@ export const NOTE_BY_SLUG_QUERY = `*[
   description,
   publishedAt,
   tags,
+  bodyMarkdown,
   body
 }`;
