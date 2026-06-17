@@ -165,6 +165,17 @@ test('project and profile pages read through the Sanity content layer', () => {
   assert.doesNotMatch(profilePage, /data\/profile/);
 });
 
+test('project cards render Sanity cover images and open live previews in a new tab', () => {
+  const projectCard = readFileSync(
+    new URL('../src/components/island/ProjectCard.astro', import.meta.url),
+    'utf8',
+  );
+
+  assert.match(projectCard, /project\.coverImage\s*\?\s*\(/);
+  assert.match(projectCard, /<img[\s\S]*src=\{project\.coverImage\}/);
+  assert.match(projectCard, /href=\{project\.demoUrl\}[\s\S]*target="_blank"[\s\S]*rel="noreferrer"/);
+});
+
 test('maps a published note and rejects missing slugs', () => {
   const source = {
     _id: 'note-one',

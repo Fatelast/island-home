@@ -14,10 +14,20 @@ const { locale, project } = Astro.props;
 
 <article class="island-card island-card--project">
   <div class={`island-card__media island-card__media--${project.coverTone}`}>
-    <span>{project.status}</span>
+    {
+      project.coverImage ? (
+        <img
+          src={project.coverImage}
+          alt={t(locale, project.title)}
+          loading="lazy"
+          decoding="async"
+        />
+      ) : null
+    }
+    <span class="island-card__media-status">{t(locale, project.status)}</span>
   </div>
-  <h2>{project.title}</h2>
-  <p>{project.summary}</p>
+  <h2>{t(locale, project.title)}</h2>
+  <p>{t(locale, project.summary)}</p>
   <TagList items={project.techStack} ariaLabel={t(locale, '技术栈')} />
   <div class="island-card__actions">
     {
@@ -31,7 +41,7 @@ const { locale, project } = Astro.props;
     }
     {
       project.demoUrl ? (
-        <a class="island-action island-action--quiet" href={project.demoUrl}>
+        <a class="island-action island-action--quiet" href={project.demoUrl} target="_blank" rel="noreferrer">
           {t(locale, '在线预览')}
         </a>
       ) : (

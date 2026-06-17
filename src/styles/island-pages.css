@@ -96,9 +96,10 @@
   max-width: 100%;
   height: clamp(132px, 11vw, 168px);
   display: grid;
-  place-items: end start;
+  align-items: end;
   margin: 0 0 18px;
   padding: 18px;
+  position: relative;
   border-radius: 18px;
   color: #fff;
   font-weight: 900;
@@ -111,6 +112,21 @@
   display: block;
   margin: -18px;
   object-fit: cover;
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+}
+
+.island-card__media-status {
+  min-height: 34px;
+  display: inline-flex;
+  align-items: center;
+  position: relative;
+  z-index: 1;
+  padding: 0 12px;
+  border-radius: 999px;
+  background: rgba(114, 93, 66, 0.68);
+  backdrop-filter: blur(10px);
 }
 
 .island-card__media--mint {
